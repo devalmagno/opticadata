@@ -21,14 +21,12 @@ class CustomersService {
     async create({ email, name, phone, cnpj, cpf }: ICustomerCreate) {
         const customerAlreadyExists = await this.customersRepository.findOne({
             email,
-            cpf,
-            cnpj
         });
 
         if (customerAlreadyExists) {
-            throw new Error("Customer already exists!!");
-        }
-
+            throw new Error("Customer already exists!!")
+        } 
+        
         const customer = this.customersRepository.create({
             cpf,
             cnpj,

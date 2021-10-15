@@ -13,6 +13,10 @@ export class CreateProduct1634264296144 implements MigrationInterface {
                         isPrimary: true
                     },
                     {
+                        name: "bar_code",
+                        type: "varchar"
+                    },
+                    {
                         name: "name",
                         type: "varchar"
                     },

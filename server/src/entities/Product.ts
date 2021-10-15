@@ -8,6 +8,9 @@ class Product {
     id: string;
 
     @Column()
+    bar_code: string;
+
+    @Column()
     name: string;
 
     @Column()
@@ -31,6 +34,10 @@ class Product {
     constructor() {
         if (!this.id) {
             this.id = uuid();
+        }
+
+        if (!this.total_sold) {
+            this.total_sold = 0;
         }
     }
 }

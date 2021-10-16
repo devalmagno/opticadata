@@ -23,8 +23,10 @@ routes.get("/managers/:cpf", managersController.authenticateToken, managersContr
 // Routes for Workers
 routes.post("/workers/register", workersController.create);
 routes.post("/workers/login", workersController.login);
-routes.get("/workers/:cpf", workersController.authenticateToken, workersController.getWorkerByCpf);
-routes.delete("/workers/:cpf", managersController.authenticateToken, workersController.removeWorker);
+routes.get("/workers/", workersController.getWorkers);
+routes.get("/workers/:id", /* workersController.authenticateToken, */ workersController.getWorkerById);
+routes.put("/workers/:id", workersController.updateWorker);
+routes.delete("/workers/:id", workersController.removeWorker);
 
 // Routes for Customers
 routes.post("/customers/register", customersController.create);

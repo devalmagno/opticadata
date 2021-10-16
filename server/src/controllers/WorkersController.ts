@@ -33,22 +33,45 @@ class WorkersController {
         return res.status(201).json(worker);
     }
 
-    async getWorkerByCpf(req: Request, res: Response) {
-        const { cpf } = req.params;
+    async getWorkers(req: Request, res: Response) {
+        const workersService = new WorkersService();
+
+        const workers = await workersService.getWorkers();
+
+        return res.status(200).json(workers);
+    }
+
+    async getWorkerById(req: Request, res: Response) {
+        const { id } = req.params;
 
         const workersService = new WorkersService();
 
-        const worker = await workersService.findWorkerByCpf(cpf);
+        const worker = await workersService.getWorkerById(id);
 
         return res.json(worker);
     }
 
+    async updateWorker(req: Request, res: Response) {
+        const { id } = req.params;
+        const { name, email, phone } = req.body;
+        
+        const workersService = new WorkersService();
+
+        try {
+            const worker = await workersService.updateBasicWorkerInfo(id, name, email, phone);
+        
+            res.status(201).json(worker);
+        } catch(err) {
+            return res.status(400).json({ err: err.message });
+        } 
+    }
+
     async removeWorker(req: Request, res: Response) {
-        const { cpf } = req.params;
+        const { id } = req.params;
 
         const workersService = new WorkersService();
 
-        const worker = await workersService.removeWorkerByCpf(cpf);
+        const worker = await workersService.removeWorker(id);
 
         return res.status(200).json(worker);
     }
@@ -61,12 +84,12 @@ class WorkersController {
         const workerPass = await workersService.findWorkerPasswordByCpf(cpf);
 
         if (!workerPass) {
-            throw new Error("Worker doesn't exists!");
+            return res.status(400).json({ err: "WRONG CPF or PASSWORD"})
         }
 
         try {
             if (await bcrypt.compare(password, workerPass.password)) {
-                const worker = await workersService.findWorkerByCpf(cpf);
+                const worker = await workersService.getWorkerByCpf(cpf);
 
                 const acessToken = jwt.sign({worker}, process.env.ACESS_TOKEN_SECRET, { expiresIn: '30m' });
                 res.json({ acessToken });

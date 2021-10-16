@@ -5,12 +5,19 @@ import { ProductsService } from "../services/ProductsService";
 class ProductsController {
 
     async create(req: Request, res: Response) {
-        const { bar_code ,name, cost_price, unit_price, total_sold, amount } = req.body;
+        const {
+             productcategory_id, 
+             bar_code, 
+             name, 
+             cost_price, 
+             unit_price, 
+             amount } = req.body;
 
         const productsService = new ProductsService();
 
         try {
             const product = await productsService.create({
+                productcategory_id,
                 bar_code,
                 name,
                 cost_price,
@@ -48,17 +55,19 @@ class ProductsController {
 
     async updateProduct(req: Request, res: Response) {
         const { id } = req.params;
-        const { name, cost_price, unit_price, amount } = req.body;
+        const { productcategory_id, name, cost_price, unit_price, amount, total_sold } = req.body;
 
         const productsService = new ProductsService();
 
         try {
             const product = await productsService.updateProduct({
+                productcategory_id,
                 id,
                 name,
                 cost_price,
                 unit_price,
-                amount
+                amount,
+                total_sold
             });
 
             return res.status(200).json(product);

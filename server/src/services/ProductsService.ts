@@ -6,11 +6,13 @@ import { ProductsRepository } from '../repositories/ProductsRepository';
 
 interface IProductCreate {
     id?: string;
+    productcategory_id: string;
     bar_code?: string;
     name: string;
     cost_price: number;
     unit_price: number;
     amount: number;
+    total_sold?: number;
 }
 
 class ProductsService {
@@ -20,7 +22,7 @@ class ProductsService {
         this.productsRepository = getCustomRepository(ProductsRepository);
     }
 
-    async create({ bar_code ,name, cost_price, unit_price, amount }: IProductCreate) {
+    async create({ productcategory_id, bar_code ,name, cost_price, unit_price, amount }: IProductCreate) {
         const productAlreadyExists = await this.productsRepository.findOne({
             bar_code,
         });
@@ -30,6 +32,7 @@ class ProductsService {
         }
 
         const product = this.productsRepository.create({
+            productcategory_id,
             bar_code,
             name,
             cost_price,
@@ -60,7 +63,7 @@ class ProductsService {
         return product;
     }
 
-    async updateProduct({ id, name, cost_price, unit_price, amount }: IProductCreate) {
+    async updateProduct({ productcategory_id, id, name, cost_price, unit_price, amount, total_sold }: IProductCreate) {
         const product = await this.productsRepository.findOne({
             id,
         });
@@ -69,7 +72,14 @@ class ProductsService {
             throw new Error("Product doesn't exists!!");
         }
 
-        this.productsRepository.merge(product, {name, cost_price, unit_price, amount});
+        this.productsRepository.merge(product, {
+            name, 
+            cost_price, 
+            unit_price, 
+            amount,
+            productcategory_id,
+            total_sold
+        });
 
         const updatedProduct = await this.productsRepository.save(product);
 

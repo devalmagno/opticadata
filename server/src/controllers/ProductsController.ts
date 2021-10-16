@@ -32,7 +32,7 @@ class ProductsController {
         return res.status(200).json(products);
     }
 
-    async getProductByBarCode(req: Request, res: Response) {
+    async getProductById(req: Request, res: Response) {
         const { id } = req.params;
 
         const productsService = new ProductsService();

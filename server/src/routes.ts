@@ -2,6 +2,7 @@ import { Router } from "express";
 import { CustomersController } from "./controllers/CustomersController";
 
 import { ManagersController } from "./controllers/ManagersController";
+import { OccupationsController } from "./controllers/OccupationsController";
 import { ProductCategoriesController } from "./controllers/ProductCategoriesController";
 import { ProductsController } from "./controllers/ProductsController";
 import { WorkersController } from "./controllers/WorkersController";
@@ -10,6 +11,7 @@ const routes = Router();
 
 // Controllers
 const managersController = new ManagersController();
+const occupationsController = new OccupationsController();
 const workersController = new WorkersController();
 const customersController = new CustomersController();
 const productCategoriesController = new ProductCategoriesController();
@@ -19,6 +21,12 @@ const productsController = new ProductsController();
 routes.post("/managers/register", managersController.create);
 routes.post("/managers/login", managersController.login);
 routes.get("/managers/:cpf", managersController.authenticateToken, managersController.getManagerByCpf);
+
+// Routes for Occupations
+routes.post("/occupations/register", occupationsController.create);
+routes.get("/occupations/", occupationsController.getOccupations);
+routes.put("/occupations/:id", occupationsController.updateOccupation);
+routes.delete("/occupations/:id", occupationsController.removeOccupation);
 
 // Routes for Workers
 routes.post("/workers/register", workersController.create);
@@ -35,10 +43,10 @@ routes.delete("/customers/:email", customersController.removeByEmail);
 
 // Routes for Product Categories
 routes.post("/productcategories/register", productCategoriesController.create);
-routes.get("/productCategories/", productCategoriesController.getProductCategories);
-routes.get("/productCategories/:id", productCategoriesController.getProductCategoryById);
-routes.put("/productCategories/:id", productCategoriesController.updateProductCategory);
-routes.delete("/productCategories/:id", productCategoriesController.removeProductCategory);
+routes.get("/productcategories/", productCategoriesController.getProductCategories);
+routes.get("/productcategories/:id", productCategoriesController.getProductCategoryById);
+routes.put("/productcategories/:id", productCategoriesController.updateProductCategory);
+routes.delete("/productcategories/:id", productCategoriesController.removeProductCategory);
 
 // Routes for Products
 routes.post("/products/register", productsController.create);

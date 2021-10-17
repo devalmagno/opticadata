@@ -1,4 +1,4 @@
-import {MigrationInterface, QueryRunner, Table} from "typeorm";
+import {MigrationInterface, QueryRunner, Table, TableForeignKey} from "typeorm";
 
 export class CreateWorker1634143508291 implements MigrationInterface {
 
@@ -11,6 +11,10 @@ export class CreateWorker1634143508291 implements MigrationInterface {
                         name: "id",
                         type: "uuid",
                         isPrimary: true
+                    },
+                    {
+                        name: "occupation_id",
+                        type: "uuid"
                     },
                     {
                         name: "name",
@@ -33,10 +37,6 @@ export class CreateWorker1634143508291 implements MigrationInterface {
                         type: "varchar"
                     },
                     {
-                        name: "occupation",
-                        type: "varchar"
-                    },
-                    {
                         name: "commission",
                         type: "float"
                     },
@@ -50,8 +50,18 @@ export class CreateWorker1634143508291 implements MigrationInterface {
                         type: "timestamp",
                         default: "now()"
                     }
+                ],
+                foreignKeys: [
+                    {
+                        name: "FKOccupation",
+                        referencedTableName: "occupations",
+                        referencedColumnNames: ["id"],
+                        columnNames: ["occupation_id"],
+                        onDelete: "SET NULL",
+                        onUpdate: "SET NULL"
+                    }
                 ]
-            })
+            }),
         )
     }
 

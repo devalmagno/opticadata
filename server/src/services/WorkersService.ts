@@ -2,16 +2,17 @@ import { getCustomRepository, Repository } from "typeorm";
 
 import { Worker } from "../entities/Worker";
 import { WorkersRepository } from "../repositories/WorkersRepository";
+import { OccupationsService } from "./OccupationsService";
 
 interface IWorkersCreate {
     id?: string;
+    occupation_id: string;
     name: string; 
     email: string;
     phone: string;
     cpf: string;
     password: string;
-    occupation: string;
-    commission: number;
+    commission?: number;
 }
 
 class WorkersService {
@@ -21,7 +22,7 @@ class WorkersService {
         this.WorkersRepository = getCustomRepository(WorkersRepository);
     }
 
-    async create({ name, email, phone, cpf, password, occupation, commission}: IWorkersCreate) {
+    async create({ occupation_id, name, email, phone, cpf, password }: IWorkersCreate) {
         const workerAlreadyExists = await this.WorkersRepository.findOne({
             cpf,
             email
@@ -32,13 +33,12 @@ class WorkersService {
         }
 
         const worker = this.WorkersRepository.create({
+            occupation_id,
             name,
             email,
             phone,
             cpf,
-            password,
-            occupation,
-            commission
+            password
         });
 
         await this.WorkersRepository.save(worker);
@@ -91,19 +91,35 @@ class WorkersService {
         return updatedWorker;
     }
 
-    // async changeWorkerOccupation(id: string, occupation: string) {
-    //     const worker = await this.WorkersRepository.findOne({ id });
+    async changeWorkerOccupation(id: string, occupation_id: string) {
+        const worker = await this.WorkersRepository.findOne({ id });
 
-    //     if (!worker) {
-    //         throw new Error ("Worker doesn't exists!!");
-    //     }
+        if (!worker) {
+            throw new Error ("Worker doesn't exists!!");
+        }
 
-    //     this.WorkersRepository.merge(worker, { occupation });
+        this.WorkersRepository.merge(worker, { occupation_id });
 
-    //     const updatedWorker = await this.WorkersRepository.save(worker);
+        const updatedWorker = await this.WorkersRepository.save(worker);
 
-    //     return updatedWorker;
-    // }
+        return updatedWorker;
+    }
+
+    async updateWorkerCommission(id: string, total_sold: number) {
+        const worker = await this.WorkersRepository.findOne({ id });
+
+        const occupationsService = new OccupationsService();
+
+        const workerOccupation = await occupationsService.getOccupationById(worker.occupation_id);
+
+        const newCommission = worker.commission + (total_sold * workerOccupation.commission_percentege); 
+
+        this.WorkersRepository.merge(worker, { commission: newCommission });
+
+        const updateWorker = await this.WorkersRepository.save(worker);
+
+        return updateWorker;
+    }
 
     async removeWorker(id: string) {
         const worker = await this.WorkersRepository.findOne({ id });

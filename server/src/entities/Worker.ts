@@ -1,11 +1,19 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { v4 as uuid } from "uuid";
+import { Occupation } from "./Occupation";
 
 @Entity("workers")
 class Worker {
 
     @PrimaryColumn()
     id: string;
+
+    @JoinColumn({ name: "occupation_id" })
+    @ManyToOne(() => Occupation)
+    occupations: Occupation;
+
+    @Column()
+    occupation_id: string;
 
     @Column()
     name: string;
@@ -23,9 +31,6 @@ class Worker {
     password: string;
 
     @Column()
-    occupation: string;
-
-    @Column()
     commission: number;
 
     @CreateDateColumn()
@@ -37,6 +42,10 @@ class Worker {
     constructor() {
         if (!this.id) {
             this.id = uuid();
+        }
+
+        if (!this.commission) {
+            this.commission = 0;
         }
     }
 }

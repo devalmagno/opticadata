@@ -7,13 +7,12 @@ import { WorkersService } from "../services/WorkersService";
 class WorkersController {
     async create(req: Request, res: Response) {
         const { 
+            occupation_id,
             name, 
             email, 
             phone, 
             cpf, 
             password, 
-            occupation, 
-            commission 
         } = req.body;
 
         const workersService = new WorkersService();
@@ -21,13 +20,12 @@ class WorkersController {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const worker = await workersService.create({
+            occupation_id,
             name, 
             email, 
             phone, 
             cpf, 
             password: hashedPassword, 
-            occupation, 
-            commission
         });
 
         return res.status(201).json(worker);

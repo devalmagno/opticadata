@@ -10,15 +10,13 @@ class ManagersController {
 
         const managersService = new ManagersService();
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-
         try {
             const manager = await managersService.create({
                 name,
                 email,
                 phone_number,
                 cpf,
-                password: hashedPassword
+                password
             });
 
             return res.status(201).json(manager);
@@ -29,14 +27,45 @@ class ManagersController {
         }
     }
 
-    async getManagerByCpf(req: Request, res: Response) {
-        const { cpf } = req.body.manager;
+    async getAllManagers(req: Request, res: Response) {
+        const managersService = new ManagersService();
+        
+        try {
+            const managers = await managersService.getAllManagers();
+
+            return res.status(200).json(managers);
+        } catch(err) {
+            res.status(400).json({ err: err.message });
+        }
+    }
+
+    async getManagerById(req: Request, res: Response) {
+        const { id } = req.body.manager;
 
         const managersService = new ManagersService();
 
-        const manager = await managersService.findManagerByCpf(cpf);
+        try {
+            const manager = await managersService.getManagerById(id);
 
-        return res.json(manager);
+            res.status(200).json(manager);
+        } catch(err) {
+            res.status(400).json({ message: err.message });
+        }
+    }
+
+    async updateManager(req: Request, res: Response) {
+        const { id } = req.params;
+        const { name, email, phone_number } = req.body;
+
+        const managersService = new ManagersService();
+
+        try {
+            const manager = await managersService.updateManager(id, name, email, phone_number);
+
+            return res.status(200).json(manager);
+        } catch(err) {
+            return res.status(400).json({ err: err.message });
+        }
     }
 
     async login(req: Request, res: Response) {
@@ -44,21 +73,10 @@ class ManagersController {
         
         const managersService = new ManagersService();
 
-        const managerPass = await managersService.findManagerPasswordByCpf(cpf);
-
-        if (!managerPass) {
-            throw new Error("Manager doesn't exists!");
-        }
-
         try {
-            if (await bcrypt.compare(password, managerPass.password)) {
-                const manager = await managersService.findManagerByCpf(cpf);
+            const acessToken = await managersService.login(cpf, password);
 
-                const acessToken = jwt.sign({manager}, process.env.ACESS_TOKEN_SECRET, { expiresIn: '30m' });
-                res.json({ acessToken });
-            } else {
-                res.status(400).json({ message: "Not Allowed" })
-            }
+            return res.status(200).json({ acessToken: acessToken });
         } catch (err) {
             return res.status(500).json({
                 message: err.message
@@ -66,17 +84,36 @@ class ManagersController {
         }
     }
 
+    async changePassword(req: Request, res: Response) {
+        const { id } = req.params;
+        const { password, newPassword } = req.body;
+
+        const managersService = new ManagersService();
+
+        try {
+            const manager = await managersService.changePassword(id, password, newPassword);
+
+            return res.status(200).json(manager);
+        } catch (err) {
+            return res.status(400).json({ message: err.message });
+        }
+    }
+
     async authenticateToken(req: Request, res: Response, next: NextFunction) {
         const authHeader = req.headers.authorization;
         const token = authHeader && authHeader.split(' ')[1];
 
-        if (token == null) return res.sendStatus(401);
+        const managersService = new ManagersService();
 
-        jwt.verify(token, process.env.ACESS_TOKEN_SECRET, (err, manager) => {
-            if (err) return res.status(403).json({ message: err.message });
-            req.body = manager;
+        if (token == null) return res.status(401).json({ message: "Token is null"});
+
+        try {
+            await managersService.authenticateToken(token);
+
             next();
-        })
+        } catch(err) {
+            res.status(500).json({ message: err.message });
+        }
     }
 }
 

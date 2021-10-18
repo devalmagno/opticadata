@@ -20,7 +20,10 @@ const productsController = new ProductsController();
 // Routes for Managers
 routes.post("/managers/register", managersController.create);
 routes.post("/managers/login", managersController.login);
-routes.get("/managers/:cpf", managersController.authenticateToken, managersController.getManagerByCpf);
+routes.post("/managers/changepassword", managersController.changePassword);
+routes.get("/managers/", managersController.getAllManagers);
+routes.get("/managers/:id", managersController.getManagerById);
+routes.put("/managers/:id", managersController.authenticateToken, managersController.updateManager);
 
 // Routes for Occupations
 routes.post("/occupations/register", occupationsController.create);

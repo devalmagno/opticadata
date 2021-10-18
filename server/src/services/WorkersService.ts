@@ -49,6 +49,10 @@ class WorkersService {
     async getWorkers() {
         const workers = await this.WorkersRepository.find();
 
+        if (!workers) {
+            throw new Error("There is no worker in the database, please create an worker before doing this operation.");
+        }
+
         return workers;
     }
 

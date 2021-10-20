@@ -1,4 +1,6 @@
 import { getCustomRepository, Repository } from "typeorm";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 import { Worker } from "../entities/Worker";
 import { WorkersRepository } from "../repositories/WorkersRepository";
@@ -11,7 +13,7 @@ interface IWorkersCreate {
     email: string;
     phone: string;
     cpf: string;
-    password: string;
+    password?: string;
     commission?: number;
 }
 
@@ -22,7 +24,7 @@ class WorkersService {
         this.WorkersRepository = getCustomRepository(WorkersRepository);
     }
 
-    async create({ occupation_id, name, email, phone, cpf, password }: IWorkersCreate) {
+    async create({ occupation_id, name, email, phone, cpf }: IWorkersCreate) {
         const workerAlreadyExists = await this.WorkersRepository.findOne({
             cpf,
             email
@@ -32,13 +34,17 @@ class WorkersService {
             throw new Error("Worker already exists!!");
         }
 
+        const password = "admin";
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const worker = this.WorkersRepository.create({
             occupation_id,
             name,
             email,
             phone,
             cpf,
-            password
+            password: hashedPassword
         });
 
         await this.WorkersRepository.save(worker);
@@ -56,27 +62,14 @@ class WorkersService {
         return workers;
     }
 
-    async findWorkerPasswordByCpf(cpf: string) {
-        const worker = await this.WorkersRepository.findOne({
-            where: { cpf },
-            select: ["password"]
-        });
-
-        return worker;
-    }
-
     async getWorkerById(id: string) {
         const worker = await this.WorkersRepository.findOne({
             id,
-        })
-
-        return worker;
-    }
-
-    async getWorkerByCpf(cpf: string) {
-        const worker = await this.WorkersRepository.findOne({
-            cpf,
         });
+
+        if (!worker) {
+            throw new Error ("Worker does not exists!!");
+        }
 
         return worker;
     }
@@ -85,7 +78,7 @@ class WorkersService {
         const worker = await this.WorkersRepository.findOne({ id });
 
         if (!worker) {
-            throw new Error ("Worker doesn't exists!!");
+            throw new Error ("Worker does not exists!!");
         }
 
         this.WorkersRepository.merge(worker, { name, email, phone });
@@ -99,7 +92,7 @@ class WorkersService {
         const worker = await this.WorkersRepository.findOne({ id });
 
         if (!worker) {
-            throw new Error ("Worker doesn't exists!!");
+            throw new Error ("Worker does not exists!!");
         }
 
         this.WorkersRepository.merge(worker, { occupation_id });
@@ -129,13 +122,71 @@ class WorkersService {
         const worker = await this.WorkersRepository.findOne({ id });
 
         if (!worker) {
-            throw new Error ("Worker doesn't exists!!");
+            throw new Error ("Worker does not exists!!");
         }
 
         await this.WorkersRepository.remove(worker);
 
         return worker;
     }
+
+    async login(cpf: string, password: string) {
+        const workerPassword = await this.WorkersRepository.findOne({
+            where: { cpf },
+            select: ["password"]
+        }); 
+
+        if (!workerPassword) {
+            throw new Error("Worker does not exists!!");
+        }
+
+        const areSimilarPasswords = await bcrypt.compare(password, workerPassword.password);
+
+        if (!areSimilarPasswords) {
+            throw new Error("Passwords do not match!");
+        }
+
+        const worker = await this.WorkersRepository.findOne({ cpf });
+
+        const acessToken = jwt.sign({ worker }, process.env.ACESS_TOKEN_SECRET, { expiresIn: '30m' });
+
+        return acessToken;
+    }
+
+    async changePassword(id: string, password: string, newPassword: string) {
+        const workerPassword = await this.WorkersRepository.findOne({
+            where: { id },
+            select: ["password"]
+        }); 
+
+        if (!workerPassword) {
+            throw new Error("Worker does not exists!!");
+        }
+
+        const areSimilarPasswords = await bcrypt.compare(password, workerPassword.password);
+
+        if (!areSimilarPasswords) {
+            throw new Error("Passwords do not match!");
+        }
+
+        const worker = await this.WorkersRepository.findOne({ id });
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        this.WorkersRepository.merge(worker, { password: hashedPassword });
+
+        const updatedWorker = await this.WorkersRepository.save(worker);
+
+        return updatedWorker;
+    }
+
+    async authenticateToken(token: string) {
+        jwt.verify(token, process.env.ACESS_TOKEN_SECRET, (err) => {
+            if (err) throw new Error(err.message);
+
+            return true;
+        })
+    } 
 }
 
 export { WorkersService };

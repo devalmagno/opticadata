@@ -112,7 +112,7 @@ class ManagersService {
         return acessToken;
     }
 
-    async changePassword(id: string, password, newPassword) {
+    async changePassword(id: string, password: string, newPassword: string) {
         const managerPassword = await this.ManagersRepository.findOne({
             where: { id },
             select: ["password"]
@@ -130,7 +130,9 @@ class ManagersService {
 
         const manager = await this.ManagersRepository.findOne({ id });
 
-        this.ManagersRepository.merge(manager, { password: newPassword });
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        this.ManagersRepository.merge(manager, { password: hashedPassword });
 
         const updatedManager = await this.ManagersRepository.save(manager);
 

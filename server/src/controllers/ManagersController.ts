@@ -93,7 +93,10 @@ class ManagersController {
         try {
             const manager = await managersService.changePassword(id, password, newPassword);
 
-            return res.status(200).json(manager);
+            return res.status(200).json({
+                message: "Password has been changed sucessfully.",
+                manager
+            });
         } catch (err) {
             return res.status(400).json({ message: err.message });
         }

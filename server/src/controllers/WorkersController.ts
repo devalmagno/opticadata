@@ -12,31 +12,35 @@ class WorkersController {
             email, 
             phone, 
             cpf, 
-            password, 
         } = req.body;
 
         const workersService = new WorkersService();
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const worker = await workersService.create({
-            occupation_id,
-            name, 
-            email, 
-            phone, 
-            cpf, 
-            password: hashedPassword, 
-        });
-
-        return res.status(201).json(worker);
+        try {
+            const worker = await workersService.create({
+                occupation_id,
+                name, 
+                email, 
+                phone, 
+                cpf, 
+            });
+    
+            return res.status(201).json(worker);
+        } catch (err) {
+            res.status(400).json({ message: err.message });
+        }
     }
 
     async getWorkers(req: Request, res: Response) {
         const workersService = new WorkersService();
 
-        const workers = await workersService.getWorkers();
+        try {
+            const workers = await workersService.getWorkers();
 
-        return res.status(200).json(workers);
+            return res.status(200).json(workers);
+        } catch(err) {
+            res.status(400).json({ message: err.message });
+        }
     }
 
     async getWorkerById(req: Request, res: Response) {
@@ -44,9 +48,13 @@ class WorkersController {
 
         const workersService = new WorkersService();
 
-        const worker = await workersService.getWorkerById(id);
+        try {
+            const worker = await workersService.getWorkerById(id);
 
-        return res.json(worker);
+            return res.json(worker);
+        } catch(err) {
+            res.status(400).json({ message: err.message });
+        }
     }
 
     async updateWorker(req: Request, res: Response) {
@@ -69,9 +77,13 @@ class WorkersController {
 
         const workersService = new WorkersService();
 
-        const worker = await workersService.removeWorker(id);
+        try {
+            const worker = await workersService.removeWorker(id);
 
-        return res.status(200).json(worker);
+            return res.status(200).json(worker);
+        } catch(err) {
+            return res.status(400).json({ err: err.message });
+        }     
     }
 
     async login(req: Request, res: Response) {
@@ -79,21 +91,10 @@ class WorkersController {
         
         const workersService = new WorkersService();
 
-        const workerPass = await workersService.findWorkerPasswordByCpf(cpf);
-
-        if (!workerPass) {
-            return res.status(400).json({ err: "WRONG CPF or PASSWORD"})
-        }
-
         try {
-            if (await bcrypt.compare(password, workerPass.password)) {
-                const worker = await workersService.getWorkerByCpf(cpf);
+            const acessToken = await workersService.login(cpf, password);
 
-                const acessToken = jwt.sign({worker}, process.env.ACESS_TOKEN_SECRET, { expiresIn: '30m' });
-                res.json({ acessToken });
-            } else {
-                res.status(400).json({ message: "Not Allowed" })
-            }
+            return res.status(200).json({ acessToken: acessToken });
         } catch (err) {
             return res.status(500).json({
                 message: err.message
@@ -101,17 +102,41 @@ class WorkersController {
         }
     }
 
+    async changePassword(req: Request, res: Response) {
+        const { id } = req.params;
+        const { password, newPassword } = req.body;
+
+        const workersService = new WorkersService();
+
+        try {
+            const worker = await workersService.changePassword(id, password, newPassword);
+
+            return res.status(200).json({
+                message: "Password has been changed sucessfully.",
+                worker
+            });
+        } catch(err) {
+            return res.status(400).json({ message: err.message });
+        }
+    }
+
     async authenticateToken(req: Request, res: Response, next: NextFunction) {
         const authHeader = req.headers.authorization;
         const token = authHeader && authHeader.split(' ')[1];
 
-        if (token == null) return res.sendStatus(401);
+        const workersService = new WorkersService();
 
-        jwt.verify(token, process.env.ACESS_TOKEN_SECRET, (err, worker) => {
-            if (err) return res.status(403).json({ message: err.message });
-            req.body = worker;
+        if (token == null) return res.status(401).json({
+            message: "Token is null"
+        });
+
+        try {
+            await workersService.authenticateToken(token);
+
             next();
-        })
+        } catch(err) {
+            res.status(500).json({ message: err.message });
+        }
     }
 }
 

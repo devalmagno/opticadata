@@ -5,6 +5,8 @@ import { ManagersController } from "./controllers/ManagersController";
 import { OccupationsController } from "./controllers/OccupationsController";
 import { ProductCategoriesController } from "./controllers/ProductCategoriesController";
 import { ProductsController } from "./controllers/ProductsController";
+import { ProvidersControllers } from "./controllers/ProvidersController";
+import { StockController } from "./controllers/StockController";
 import { WorkersController } from "./controllers/WorkersController";
 
 const routes = Router();
@@ -16,6 +18,8 @@ const workersController = new WorkersController();
 const customersController = new CustomersController();
 const productCategoriesController = new ProductCategoriesController();
 const productsController = new ProductsController();
+const providersController = new ProvidersControllers();
+const stockController = new StockController();
 
 // Routes for Managers
 routes.post("/managers/register", managersController.create);
@@ -58,5 +62,16 @@ routes.get("/products/", productsController.getProducts);
 routes.get("/products/:id", productsController.getProductById);
 routes.put("/products/:id", productsController.updateProduct);
 routes.delete("/products/:id", productsController.removeProduct);
+
+// Routes for Providers
+routes.post("/providers", providersController.create);
+routes.get("/providers", providersController.getProviders);
+routes.put("/providers/:id", providersController.updateProvider);
+routes.delete("/providers/:id", providersController.removeProvider);
+
+// Routes for Stock
+routes.post("/stock", stockController.create);
+routes.get("/stock", stockController.getStocks);
+routes.get("/stock/product", stockController.getStocksByProduct);
 
 export { routes };

@@ -6,7 +6,7 @@ import { ManagersService } from "../services/ManagersService";
 
 class ManagersController {
     async create(req: Request, res: Response) {
-        const { name, email, phone_number, cpf, password } = req.body;
+        const { name, email, phone, cpf, password } = req.body;
 
         const managersService = new ManagersService();
 
@@ -14,12 +14,15 @@ class ManagersController {
             const manager = await managersService.create({
                 name,
                 email,
-                phone_number,
+                phone,
                 cpf,
                 password
             });
 
-            return res.status(201).json(manager);
+            return res.status(201).json({
+                message: "Manager has been created sucessfully.",
+                manager
+            });
         } catch(err) {
             return res.status(400).json({
                 message: err.message
@@ -55,14 +58,17 @@ class ManagersController {
 
     async updateManager(req: Request, res: Response) {
         const { id } = req.params;
-        const { name, email, phone_number } = req.body;
+        const { name, email, phone } = req.body;
 
         const managersService = new ManagersService();
 
         try {
-            const manager = await managersService.updateManager(id, name, email, phone_number);
+            const manager = await managersService.updateManager(id, name, email, phone);
 
-            return res.status(200).json(manager);
+            return res.status(200).json({
+                message: "Manager has been updated sucessfully.",
+                manager
+            });
         } catch(err) {
             return res.status(400).json({ err: err.message });
         }
@@ -78,7 +84,7 @@ class ManagersController {
 
             return res.status(200).json({ acessToken: acessToken });
         } catch (err) {
-            return res.status(500).json({
+            return res.status(401).json({
                 message: err.message
             });
         }
@@ -115,7 +121,7 @@ class ManagersController {
 
             next();
         } catch(err) {
-            res.status(500).json({ message: err.message });
+            res.status(401).json({ message: err.message });
         }
     }
 }

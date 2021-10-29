@@ -25,20 +25,8 @@ export class CreateProduct1634264296144 implements MigrationInterface {
                         type: "varchar"
                     },
                     {
-                        name: "cost_price",
-                        type: "float"
-                    },
-                    {
                         name: "unit_price",
                         type: "float"
-                    },
-                    {
-                        name: "total_sold",
-                        type: "int"
-                    },
-                    {
-                        name: "amount",
-                        type: "int"
                     },
                     {
                         name: "created_at",

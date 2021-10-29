@@ -1,26 +1,20 @@
 import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
-
 import { v4 as uuid } from "uuid";
 
-@Entity("managers")
-class Manager {
+@Entity("provider")
+class Provider {
+
     @PrimaryColumn()
     id: string;
+
+    @Column()
+    cnpj: string;
 
     @Column()
     name: string;
 
     @Column()
-    email: string;
-
-    @Column()
     phone: string;
-
-    @Column()
-    cpf: string;
-
-    @Column({ select: false })
-    password: string;
 
     @CreateDateColumn()
     created_at: Date;
@@ -35,4 +29,4 @@ class Manager {
     }
 }
 
-export { Manager };
+export { Provider };

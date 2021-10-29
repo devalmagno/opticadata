@@ -25,7 +25,10 @@ class WorkersController {
                 cpf, 
             });
     
-            return res.status(201).json(worker);
+            return res.status(201).json({
+                message: "Worker has been created sucessfully.",
+                worker
+            });
         } catch (err) {
             res.status(400).json({ message: err.message });
         }
@@ -66,7 +69,10 @@ class WorkersController {
         try {
             const worker = await workersService.updateBasicWorkerInfo(id, name, email, phone);
         
-            res.status(201).json(worker);
+            res.status(201).json({
+                message: "Worker has been updated sucessfully.",
+                worker
+            });
         } catch(err) {
             return res.status(400).json({ err: err.message });
         } 
@@ -80,7 +86,10 @@ class WorkersController {
         try {
             const worker = await workersService.removeWorker(id);
 
-            return res.status(200).json(worker);
+            return res.status(200).json({
+                message: "Worker has been deleted sucessfully",
+                worker
+            });
         } catch(err) {
             return res.status(400).json({ err: err.message });
         }     
@@ -96,7 +105,7 @@ class WorkersController {
 
             return res.status(200).json({ acessToken: acessToken });
         } catch (err) {
-            return res.status(500).json({
+            return res.status(401).json({
                 message: err.message
             });
         }
@@ -135,7 +144,7 @@ class WorkersController {
 
             next();
         } catch(err) {
-            res.status(500).json({ message: err.message });
+            res.status(401).json({ message: err.message });
         }
     }
 }

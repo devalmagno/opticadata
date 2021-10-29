@@ -9,10 +9,7 @@ interface IProductCreate {
     productcategory_id: string;
     bar_code?: string;
     name: string;
-    cost_price: number;
     unit_price: number;
-    amount: number;
-    total_sold?: number;
 }
 
 class ProductsService {
@@ -22,7 +19,7 @@ class ProductsService {
         this.productsRepository = getCustomRepository(ProductsRepository);
     }
 
-    async create({ productcategory_id, bar_code ,name, cost_price, unit_price, amount }: IProductCreate) {
+    async create({ productcategory_id, bar_code ,name, unit_price }: IProductCreate) {
         const productAlreadyExists = await this.productsRepository.findOne({
             bar_code,
         });
@@ -35,9 +32,7 @@ class ProductsService {
             productcategory_id,
             bar_code,
             name,
-            cost_price,
-            unit_price,
-            amount
+            unit_price
         });
 
         await this.productsRepository.save(product);
@@ -63,7 +58,7 @@ class ProductsService {
         return product;
     }
 
-    async updateProduct({ productcategory_id, id, name, cost_price, unit_price, amount, total_sold }: IProductCreate) {
+    async updateProduct({ productcategory_id, id, name, unit_price }: IProductCreate) {
         const product = await this.productsRepository.findOne({
             id,
         });
@@ -74,11 +69,8 @@ class ProductsService {
 
         this.productsRepository.merge(product, {
             name, 
-            cost_price, 
             unit_price, 
-            amount,
             productcategory_id,
-            total_sold
         });
 
         const updatedProduct = await this.productsRepository.save(product);

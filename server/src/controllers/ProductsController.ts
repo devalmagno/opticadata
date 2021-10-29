@@ -9,9 +9,8 @@ class ProductsController {
              productcategory_id, 
              bar_code, 
              name, 
-             cost_price, 
              unit_price, 
-             amount } = req.body;
+        } = req.body;
 
         const productsService = new ProductsService();
 
@@ -20,14 +19,12 @@ class ProductsController {
                 productcategory_id,
                 bar_code,
                 name,
-                cost_price,
                 unit_price,
-                amount
             });
 
             return res.status(201).json(product);
         } catch(err) {
-            return res.status(401).json(err.message);
+            return res.status(400).json(err.message);
         }
     }
 
@@ -64,10 +61,7 @@ class ProductsController {
                 productcategory_id,
                 id,
                 name,
-                cost_price,
                 unit_price,
-                amount,
-                total_sold
             });
 
             return res.status(200).json(product);
@@ -84,7 +78,7 @@ class ProductsController {
         try {
             const product = await productsService.removeProduct(id);
 
-            res.status(201).json(product);
+            res.status(200).json(product);
         } catch(err) {
             res.status(400).json({ err: err.message });
         }

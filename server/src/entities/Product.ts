@@ -23,16 +23,7 @@ class Product {
     name: string;
 
     @Column()
-    cost_price: number;
-
-    @Column()
     unit_price: number;
-
-    @Column()
-    total_sold: number;
-
-    @Column()
-    amount: number;
 
     @CreateDateColumn()
     created_at: Date;
@@ -43,10 +34,6 @@ class Product {
     constructor() {
         if (!this.id) {
             this.id = uuid();
-        }
-
-        if (!this.total_sold) {
-            this.total_sold = 0;
         }
     }
 }

@@ -8,7 +8,7 @@ import { ManagersRepository } from "../repositories/ManagersRepository";
 interface IManagersCreate {
     name: string;
     email: string;
-    phone_number: string;
+    phone: string;
     cpf: string;
     password: string;
 }
@@ -20,7 +20,7 @@ class ManagersService {
         this.ManagersRepository = getCustomRepository(ManagersRepository);
     }
 
-    async create({ name, email, phone_number, cpf, password }: IManagersCreate) {
+    async create({ name, email, phone, cpf, password }: IManagersCreate) {
         const managerAlreadyExists = await this.ManagersRepository.findOne({
             cpf
         });
@@ -34,7 +34,7 @@ class ManagersService {
         const managers = this.ManagersRepository.create({
             name,
             email,
-            phone_number,
+            phone,
             cpf,
             password: hashedPassword
         });
@@ -75,14 +75,14 @@ class ManagersService {
         return manager;
     }
 
-    async updateManager(id: string, name?: string, email?: string, phone_number?: string) {
+    async updateManager(id: string, name?: string, email?: string, phone?: string) {
         const manager = await this.ManagersRepository.findOne({ id });
         
         if (!manager) {
             throw new Error("Manager doesn't exists!!");
         }
 
-        this.ManagersRepository.merge(manager, { name, email, phone_number });
+        this.ManagersRepository.merge(manager, { name, email, phone });
 
         const updatedManager = await this.ManagersRepository.save(manager);
 

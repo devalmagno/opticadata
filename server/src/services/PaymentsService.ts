@@ -6,7 +6,6 @@ import { PaymentsRepository } from "../repositories/PaymentsRepository";
 interface IPaymentsCreate {
     id?: string;
     type_of_payment: string;
-    times: number;
 }
 
 class PaymentsService {
@@ -16,10 +15,9 @@ class PaymentsService {
         this.paymentsRepository = getCustomRepository(PaymentsRepository);
     }
 
-    async create({ type_of_payment, times }: IPaymentsCreate) {
+    async create({ type_of_payment }: IPaymentsCreate) {
         const payment = this.paymentsRepository.create({
             type_of_payment,
-            times
         });
 
         await this.paymentsRepository.save(payment);

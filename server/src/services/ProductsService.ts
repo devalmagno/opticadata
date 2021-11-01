@@ -7,7 +7,6 @@ import { ProductsRepository } from '../repositories/ProductsRepository';
 interface IProductCreate {
     id?: string;
     productcategory_id: string;
-    bar_code?: string;
     name: string;
     unit_price: number;
 }
@@ -19,9 +18,9 @@ class ProductsService {
         this.productsRepository = getCustomRepository(ProductsRepository);
     }
 
-    async create({ productcategory_id, bar_code ,name, unit_price }: IProductCreate) {
+    async create({ productcategory_id, name, unit_price }: IProductCreate) {
         const productAlreadyExists = await this.productsRepository.findOne({
-            bar_code,
+            name,
         });
 
         if (productAlreadyExists) {
@@ -30,7 +29,6 @@ class ProductsService {
 
         const product = this.productsRepository.create({
             productcategory_id,
-            bar_code,
             name,
             unit_price
         });

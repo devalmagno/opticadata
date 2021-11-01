@@ -14,7 +14,6 @@ interface IWorkersCreate {
     phone: string;
     cpf: string;
     password?: string;
-    commission?: number;
 }
 
 class WorkersService {
@@ -100,22 +99,6 @@ class WorkersService {
         const updatedWorker = await this.WorkersRepository.save(worker);
 
         return updatedWorker;
-    }
-
-    async updateWorkerCommission(id: string, total_sold: number) {
-        const worker = await this.WorkersRepository.findOne({ id });
-
-        const occupationsService = new OccupationsService();
-
-        const workerOccupation = await occupationsService.getOccupationById(worker.occupation_id);
-
-        const newCommission = worker.commission + (total_sold * workerOccupation.commission_percentege); 
-
-        this.WorkersRepository.merge(worker, { commission: newCommission });
-
-        const updateWorker = await this.WorkersRepository.save(worker);
-
-        return updateWorker;
     }
 
     async removeWorker(id: string) {

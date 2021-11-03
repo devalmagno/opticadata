@@ -60,7 +60,7 @@ class ManagersService {
         });
 
         if (!manager) {
-            throw new Error("Manager doesn't exists!!");
+            throw new Error("Manager does not exists!!");
         }
 
         return manager;
@@ -79,7 +79,7 @@ class ManagersService {
         const manager = await this.ManagersRepository.findOne({ id });
         
         if (!manager) {
-            throw new Error("Manager doesn't exists!!");
+            throw new Error("Manager does not exists!!");
         }
 
         this.ManagersRepository.merge(manager, { name, email, phone });
@@ -96,13 +96,13 @@ class ManagersService {
         });
 
         if (!managerPassword) {
-            throw new Error("Manager doesn't exists!!");
+            throw new Error("Manager does not exists!!");
         }
 
         const areSimilarPasswords = await bcrypt.compare(password, managerPassword.password);
 
         if (!areSimilarPasswords) {
-            throw new Error("Passwords don't matched");
+            throw new Error("Passwords do not matched");
         }
 
         const manager = await this.ManagersRepository.findOne({ cpf });
@@ -119,13 +119,13 @@ class ManagersService {
         });
 
         if (!managerPassword) {
-            throw new Error("Manager doesn't exists!!");
+            throw new Error("Manager does not exists!!");
         }
 
         const areSimilarPasswords = await bcrypt.compare(password, managerPassword.password);
 
         if (!areSimilarPasswords) {
-            throw new Error("Passwords don't matched");
+            throw new Error("Passwords do not matched");
         }
 
         const manager = await this.ManagersRepository.findOne({ id });

@@ -7,7 +7,6 @@ class ProductsController {
     async create(req: Request, res: Response) {
         const {
              productcategory_id, 
-             bar_code, 
              name, 
              unit_price, 
         } = req.body;
@@ -17,7 +16,6 @@ class ProductsController {
         try {
             const product = await productsService.create({
                 productcategory_id,
-                bar_code,
                 name,
                 unit_price,
             });

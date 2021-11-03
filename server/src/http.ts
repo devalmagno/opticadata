@@ -10,4 +10,4 @@ const http = createServer(app);
 app.use(express.json());
 app.use(routes);
 
-export { http };
+export { http, app };

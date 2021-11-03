@@ -3,6 +3,7 @@ import { Router } from "express";
 import { CustomersController } from "./controllers/CustomersController";
 import { ManagersController } from "./controllers/ManagersController";
 import { OccupationsController } from "./controllers/OccupationsController";
+import { OrdersController } from "./controllers/OrdersController";
 import { ProductCategoriesController } from "./controllers/ProductCategoriesController";
 import { ProductsController } from "./controllers/ProductsController";
 import { ProvidersControllers } from "./controllers/ProvidersController";
@@ -20,6 +21,7 @@ const productCategoriesController = new ProductCategoriesController();
 const productsController = new ProductsController();
 const providersController = new ProvidersControllers();
 const stockController = new StockController();
+const ordersController = new OrdersController();
 
 // Routes for Managers
 routes.post("/managers/register", managersController.create);
@@ -73,5 +75,11 @@ routes.delete("/providers/:id", providersController.removeProvider);
 routes.post("/stock", stockController.create);
 routes.get("/stock", stockController.getStocks);
 routes.get("/stock/product", stockController.getStocksByProduct);
+
+// Routes for Orders
+routes.post("/orders", ordersController.create);
+routes.get("/orders", ordersController.getOrders);
+routes.get("/orders/:id", ordersController.getOrdersById);
+routes.delete("/orders/:id", ordersController.removeOrder);
 
 export { routes };

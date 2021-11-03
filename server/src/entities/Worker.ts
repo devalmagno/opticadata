@@ -30,9 +30,6 @@ class Worker {
     @Column({ select: false })
     password: string;
 
-    @Column()
-    commission: number;
-
     @CreateDateColumn()
     created_at: Date;
 
@@ -42,10 +39,6 @@ class Worker {
     constructor() {
         if (!this.id) {
             this.id = uuid();
-        }
-
-        if (!this.commission) {
-            this.commission = 0;
         }
     }
 }

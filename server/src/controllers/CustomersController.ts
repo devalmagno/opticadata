@@ -8,15 +8,19 @@ class CustomersController {
 
         const customersService = new CustomersService();
 
-        const customer = await customersService.create({
-            email,
-            name,
-            phone,
-            cnpj,
-            cpf
-        });
-
-        return res.status(201).json(customer);
+        try {
+            const customer = await customersService.create({
+                email,
+                name,
+                phone,
+                cnpj,
+                cpf
+            });
+    
+            return res.status(201).json(customer);
+        } catch(err) {
+            return res.status(401).json({ message: err.message });
+        }
     }
 
     async getByEmail(req: Request, res: Response) {
@@ -24,9 +28,13 @@ class CustomersController {
 
         const customersService = new CustomersService();
 
-        const customer = await customersService.getCustomer(email);
+        try {
+            const customer = await customersService.getCustomer(email);
 
-        return res.json(customer);
+            return res.status(200).json(customer);
+        } catch(err) {
+            return res.status(400).json({ message: err.message });
+        }
     }
 
     async removeByEmail(req: Request, res: Response) {
@@ -34,9 +42,13 @@ class CustomersController {
 
         const customersService = new CustomersService();
 
-        const customer = await customersService.remove(email);
+        try {
+            const customer = await customersService.remove(email);
 
-        return res.json(customer);
+            return res.status(200).json(customer);
+        } catch(err) {
+            return res.status(400).json({ message: err.message });
+        }
     }
 }
 

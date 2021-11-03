@@ -1,11 +1,11 @@
-import {MigrationInterface, QueryRunner, Table, TableForeignKey} from "typeorm";
+import {MigrationInterface, QueryRunner, Table} from "typeorm";
 
-export class CreateWorker1634143508291 implements MigrationInterface {
+export class CreateInstallments1635704216910 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
             new Table({
-                name: "workers",
+                name: "installments",
                 columns: [
                     {
                         name: "id",
@@ -13,28 +13,22 @@ export class CreateWorker1634143508291 implements MigrationInterface {
                         isPrimary: true
                     },
                     {
-                        name: "occupation_id",
+                        name: "payment_id",
                         type: "uuid"
                     },
                     {
-                        name: "name",
-                        type: "varchar"
+                        name: "price",
+                        type: "float"
                     },
                     {
-                        name: "email",
-                        type: "varchar"
+                        name: "payment_date",
+                        type: "timestamp",
+                        default: "now()"
                     },
                     {
-                        name: "phone",
-                        type: "varchar"
-                    },
-                    {
-                        name: "cpf",
-                        type: "varchar"
-                    },
-                    {
-                        name: "password",
-                        type: "varchar"
+                        name: "status",
+                        type: "boolean",
+                        default: false
                     },
                     {
                         name: "created_at",
@@ -49,20 +43,20 @@ export class CreateWorker1634143508291 implements MigrationInterface {
                 ],
                 foreignKeys: [
                     {
-                        name: "FKOccupation",
-                        referencedTableName: "occupations",
+                        name: "FKPayment",
+                        referencedTableName: "payments",
                         referencedColumnNames: ["id"],
-                        columnNames: ["occupation_id"],
+                        columnNames: ["payment_id"],
                         onDelete: "SET NULL",
                         onUpdate: "SET NULL"
                     }
                 ]
-            }),
+            })
         )
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable("workers");
+        await queryRunner.dropTable("installments");
     }
 
 }

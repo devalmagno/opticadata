@@ -46,7 +46,7 @@ class CustomersService {
         });
 
         if (!customer) {
-            throw new Error("Customer doesn't exists!!");
+            throw new Error("Customer does not exists!!");
         } 
 
         return customer;
@@ -58,7 +58,7 @@ class CustomersService {
         });
 
         if (!customer) {
-            throw new Error("Customer doesn't exists!!");
+            throw new Error("Customer does not exists!!");
         }
 
         await this.customersRepository.remove(customer);

@@ -17,9 +17,6 @@ class Product {
     productcategory_id: string;
 
     @Column()
-    bar_code: string;
-
-    @Column()
     name: string;
 
     @Column()

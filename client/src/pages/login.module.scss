@@ -76,3 +76,26 @@
 .inputBox.button input:hover {
     background: var(--title);
 }
+
+.inputBox .capslock {
+    font-size: 0.8rem;
+    color: var(--green);
+    position: relative;
+    margin-top: 0.25rem;
+}
+
+.inputBox .capslock strong {
+    margin-left: 1rem;
+}
+
+.inputBox .capslock::after {
+    content: '';
+    height: 0.625rem;
+    width: 0.625rem;
+    position: absolute;
+    bottom: 0.2rem;
+    left: 0;
+    border-radius: 100%;
+
+    background: var(--green);
+}

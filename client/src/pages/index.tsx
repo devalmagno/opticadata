@@ -1,11 +1,30 @@
-import { useState } from "react";
+import { KeyboardEvent, useRef, useState } from "react";
+
 import styles from "./login.module.scss";
 
 const Home = () => {
+    const cpfRef = useRef<HTMLInputElement>(null);
+
     const [isManager, setIsManager] = useState(false);
+    const [isCapsLockOn, setIsCapslockOn] = useState(false);
 
     const handleManager = () => {
       setIsManager(!isManager);
+    }
+
+    const handleCPFInput = () => {
+        if (cpfRef.current?.value.length == 3 || cpfRef.current?.value.length == 7) {
+            cpfRef.current.value += ".";
+        }
+
+        if (cpfRef.current?.value.length == 11) {
+            cpfRef.current.value += "-";
+        }
+    }
+
+    const handleCapslock = (keyEvent: KeyboardEvent) => {
+        if (keyEvent.getModifierState("CapsLock")) setIsCapslockOn(true);
+        else setIsCapslockOn(false);
     }
 
     return (
@@ -23,10 +42,13 @@ const Home = () => {
                 <form action="#">
                         <div className={styles.inputBox}>
                             <input
+                                ref={cpfRef}
                                 type="text"
                                 name="cpf"
                                 id="cpf"
                                 placeholder="CPF"
+                                maxLength={14}
+                                onKeyDown={handleCPFInput}
                                 required
                             />
                         </div>
@@ -36,9 +58,19 @@ const Home = () => {
                                 name="password"
                                 id="password"
                                 placeholder="Senha"
+                                onKeyDown={keyEvent => handleCapslock(keyEvent)}
                                 required
                             />
+                            { 
+                                isCapsLockOn &&
+                                (
+                                    <div className={styles.capslock}>
+                                        <strong>CapsLock ativado</strong>
+                                    </div>      
+                                )
+                            }
                         </div>
+
                         <div className={`${styles.inputBox} ${styles.button}`}>
                             <input type="submit" value="Entrar" />
                         </div>

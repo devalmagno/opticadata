@@ -18,6 +18,7 @@ export class CreateProductsOrder1635777226329 implements MigrationInterface {
                     {
                         name: "product_id",
                         type: "uuid",
+                        isNullable: true
                     },
                     {
                         name: "quantity",
@@ -35,8 +36,8 @@ export class CreateProductsOrder1635777226329 implements MigrationInterface {
                         referencedTableName: "orders",
                         referencedColumnNames: ["id"],
                         columnNames: ["order_id"],
-                        onDelete: "SET NULL",   
-                        onUpdate: "SET NULL"
+                        onDelete: "CASCADE",   
+                        onUpdate: "CASCADE"
                     },
                     {
                         name: "FKProduct",
@@ -44,12 +45,14 @@ export class CreateProductsOrder1635777226329 implements MigrationInterface {
                         referencedColumnNames: ["id"],
                         columnNames: ["product_id"],
                         onDelete: "SET NULL",
-                        onUpdate: "SET NULL"
+                        onUpdate: "CASCADE"
                     }
                 ]
             })
         );
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {}
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.dropTable("products_order");
+    }
 }

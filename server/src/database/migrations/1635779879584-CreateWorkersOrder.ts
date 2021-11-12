@@ -19,6 +19,7 @@ export class CreateWorkersOrder1635779879584 implements MigrationInterface {
                     {
                         name: "worker_id",
                         type: "uuid",
+                        isNullable: true
                     },
                     {
                         name: "created_at",
@@ -32,8 +33,8 @@ export class CreateWorkersOrder1635779879584 implements MigrationInterface {
                         referencedTableName: "orders",
                         referencedColumnNames: ["id"],
                         columnNames: ["order_id"],
-                        onDelete: "SET NULL",   
-                        onUpdate: "SET NULL"
+                        onDelete: "CASCADE",   
+                        onUpdate: "CASCADE"
                     },
                     {
                         name: "FKWorker",
@@ -41,7 +42,7 @@ export class CreateWorkersOrder1635779879584 implements MigrationInterface {
                         referencedColumnNames: ["id"],
                         columnNames: ["worker_id"],
                         onDelete: "SET NULL",
-                        onUpdate: "SET NULL"
+                        onUpdate: "CASCADE"
                     }
                 ]
             })

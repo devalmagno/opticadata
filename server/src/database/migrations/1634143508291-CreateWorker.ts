@@ -14,7 +14,8 @@ export class CreateWorker1634143508291 implements MigrationInterface {
                     },
                     {
                         name: "occupation_id",
-                        type: "uuid"
+                        type: "uuid",
+                        isNullable: true
                     },
                     {
                         name: "name",

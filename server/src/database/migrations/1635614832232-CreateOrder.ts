@@ -15,6 +15,7 @@ export class CreateOrder1635614832232 implements MigrationInterface {
                     {
                         name: "payment_id",
                         type: "uuid",
+                        isNullable: true,
                     },
                     {
                         name: "customer_id",

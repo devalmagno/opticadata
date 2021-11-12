@@ -1,0 +1,78 @@
+.container {
+    min-height: 100vh;
+    width: 100%;
+
+    background: var(--bg);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login {
+    max-width: 28rem;
+    width: 100%;
+    height: 31rem;
+
+    background: var(--bg-secondary);
+
+    border-radius: 1rem;
+    padding: 32px;
+}
+
+.login .user {
+    margin: 2rem 0;
+}
+
+.login h2 {
+    color: var(--title);
+}
+
+.login .user strong {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.login .user strong:hover {
+    color: var(--bg);
+}
+
+.login form .inputBox {
+    height: 3.25rem;
+    margin: 1.5rem 0;
+    position: relative;
+}
+
+.inputBox input {
+    height: 100%;
+    width: 100%;
+    outline: none;
+    padding: 0 1rem;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #333;
+    border: 1.5px solid var(--subtitle);
+    border-bottom-width: 2.5px;
+    border-radius: 0.625rem;
+    transition: all 0.3s ease;
+}
+
+.inputBox input:focus,
+.inputBox input:valid {
+    border-color: var(--title);
+} 
+
+.inputBox.button input {
+    border: none;
+    background: var(--bg);
+    color: var(--bg-secondary);
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    margin-top: 1rem;
+}
+
+.inputBox.button input:hover {
+    background: var(--title);
+}

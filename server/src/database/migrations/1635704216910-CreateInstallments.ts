@@ -14,7 +14,8 @@ export class CreateInstallments1635704216910 implements MigrationInterface {
                     },
                     {
                         name: "payment_id",
-                        type: "uuid"
+                        type: "uuid",
+                        isNullable: true,
                     },
                     {
                         name: "price",
@@ -47,8 +48,8 @@ export class CreateInstallments1635704216910 implements MigrationInterface {
                         referencedTableName: "payments",
                         referencedColumnNames: ["id"],
                         columnNames: ["payment_id"],
-                        onDelete: "SET NULL",
-                        onUpdate: "SET NULL"
+                        onDelete: "CASCADE",
+                        onUpdate: "CASCADE"
                     }
                 ]
             })

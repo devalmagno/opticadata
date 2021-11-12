@@ -1,8 +1,10 @@
 import express from "express";
 import { createServer } from "http";
 
-import "./database";
+import createConnection from "./database";
 import { routes } from "./routes";
+
+createConnection();
 
 const app = express();
 const http = createServer(app);

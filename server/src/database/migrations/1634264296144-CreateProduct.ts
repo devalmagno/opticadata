@@ -14,7 +14,8 @@ export class CreateProduct1634264296144 implements MigrationInterface {
                     },
                     {
                         name: "productcategory_id",
-                        type: "uuid"
+                        type: "uuid",
+                        isNullable: true
                     },
                     {
                         name: "name",

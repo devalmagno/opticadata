@@ -14,7 +14,8 @@ export class CreateStock1635536720521 implements MigrationInterface {
                     },
                     {
                         name: "product_id",
-                        type: "uuid"
+                        type: "uuid",
+                        isNullable: true
                     },
                     {
                         name: "provider_id",

@@ -4,9 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev src/server.ts",
+    "dev": "set NODE_ENV=dev && ts-node-dev src/server.ts",
     "typeorm": "ts-node-dev node_modules/typeorm/cli.js",
-    "test": "jest --detectOpenHandles"
+    "test": "set NODE_ENV=test && jest --detectOpenHandles"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

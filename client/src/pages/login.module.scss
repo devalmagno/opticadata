@@ -2,11 +2,19 @@
     min-height: 100vh;
     width: 100%;
 
-    background: var(--bg);
+    background: var(--bg-secondary);
 
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.container .logo {
+    margin-right: 10rem;
+}
+
+.container .logo img {
+    height: 10rem;
 }
 
 .login {
@@ -15,6 +23,7 @@
     height: 31rem;
 
     background: var(--bg-secondary);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 
     border-radius: 1rem;
     padding: 32px;
@@ -60,7 +69,7 @@
 .inputBox input:focus,
 .inputBox input:valid {
     border-color: var(--title);
-} 
+}
 
 .inputBox.button input {
     border: none;
@@ -70,22 +79,41 @@
     transition: all 0.3s ease;
     cursor: pointer;
 
-    margin-top: 1rem;
+    margin-top: 1.5rem;
 }
 
 .inputBox.button input:hover {
     background: var(--title);
 }
 
-.inputBox .capslock {
+.inputBox .warning {
     font-size: 0.8rem;
-    color: var(--green);
     position: relative;
     margin-top: 0.25rem;
 }
 
-.inputBox .capslock strong {
+.inputBox .warning strong {
     margin-left: 1rem;
+}
+
+.inputBox .isword {
+    color: var(--red);
+}
+
+.inputBox .isword::after {
+    content: '';
+    height: 0.625rem;
+    width: 0.625rem;
+    position: absolute;
+    bottom: 0.2rem;
+    left: 0;
+    border-radius: 100%;
+
+    background: var(--red);
+}
+
+.inputBox .capslock {
+    color: var(--green);
 }
 
 .inputBox .capslock::after {
@@ -98,4 +126,39 @@
     border-radius: 100%;
 
     background: var(--green);
+}
+
+.container .footer {
+    position: absolute;
+    bottom: 0rem;
+    width: 100%;
+    opacity: 0.7;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    color: var(--bg);
+    font-size: 0.8rem;
+    font-weight: 600;
+
+    pointer-events: none;
+}
+
+.container .footer img {
+    height: 5rem;
+}
+
+@media screen and (max-width: 1000px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .container .logo {
+        margin-right: 0;
+    }
+
+    .container .logo img {
+        height: 5rem;
+    }
 }

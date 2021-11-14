@@ -1,15 +1,20 @@
-import { FormEvent, KeyboardEvent, useRef, useState } from "react";
+import { GetServerSideProps } from "next";
+import { parseCookies } from "nookies";
+import { FormEvent, KeyboardEvent, useContext, useRef, useState } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+
 import { api } from "../services/api";
 
 import styles from "./login.module.scss";
 
 const Home = () => {
     const cpfRef = useRef<HTMLInputElement>(null);
+    const { signIn } = useContext(AuthContext);
 
     const [isManager, setIsManager] = useState(false);
     const [isCapsLockOn, setIsCapslockOn] = useState(false);
     const [isWord, setIsWord] = useState(false);
-    const [isError, setIsError] = useState(false);
+    const [error, setError] = useState(false);
 
     const [cpf, setCpf] = useState('');
     const [password, setPassword] = useState('');
@@ -44,21 +49,14 @@ const Home = () => {
         else setIsCapslockOn(false);
     }
 
-    const handleLogin = (e: FormEvent) => {
+    const handleSignIn = async (e: FormEvent) => {
         e.preventDefault();
 
-        api.post('managers/login', {
-            cpf,
-            password
-        }).then(response => {
-            alert('Login realizado com sucesso!');
-
-            const { acessToken } = response.data;
-
-            setAcessToken( acessToken ); 
-        }).catch(() => {
-            setIsError(true)
-        });
+        try {
+            await signIn({cpf, password});
+        } catch(err) {
+            setError(true);
+        }
     }
 
     return (
@@ -77,11 +75,10 @@ const Home = () => {
                       { isManager ? 'Funcionário' : 'Gerente' }
                     </strong>
                 </div>
-                <form onSubmit={handleLogin}>
+                <form onSubmit={handleSignIn}>
                         <div className={`${styles.inputBox} ${styles.cpf}`}>
                             <input
                                 ref={cpfRef}
-                                
                                 type="text"
                                 name="cpf"
                                 id="cpf"
@@ -90,7 +87,6 @@ const Home = () => {
                                 autoComplete="off"
                                 maxLength={14}
                                 onKeyDown={keyEvent => handleCPFInput(keyEvent)}
-                                value={cpf}
                                 onChange={e => { setCpf(e.target.value) }}
                                 required
                             />
@@ -111,7 +107,6 @@ const Home = () => {
                                 id="password"
                                 placeholder="Senha"
                                 onKeyDown={keyEvent => handleCapslock(keyEvent)}
-                                value={password}
                                 onChange={e => { setPassword(e.target.value) }}
                                 required
                             />
@@ -125,10 +120,10 @@ const Home = () => {
                             }
 
 {
-                                isError &&
+                                error &&
                                 (
                                     <div className={`${styles.warning} ${styles.isword}`}>
-                                        <strong>CPF ou senha errado.</strong>
+                                        <strong>CPF ou senha inválida.</strong>
                                     </div>
                                 )
                             }
@@ -147,5 +142,24 @@ const Home = () => {
         </div>
     );
 };
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+    const { 'opdauth.token': token } = parseCookies(ctx);
+    
+    if (token) {
+        return {
+            redirect: {
+                destination: '/dashboard',
+                permanent: false,
+            }
+        }
+    }
+
+    return {
+        props: {
+
+        }
+    }
+}
 
 export default Home;

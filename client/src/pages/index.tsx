@@ -1,9 +1,8 @@
 import { GetServerSideProps } from "next";
+import Head from "next/head";
 import { parseCookies } from "nookies";
 import { FormEvent, KeyboardEvent, useContext, useRef, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-
-import { api } from "../services/api";
 
 import styles from "./login.module.scss";
 
@@ -18,12 +17,10 @@ const Home = () => {
 
     const [cpf, setCpf] = useState('');
     const [password, setPassword] = useState('');
-    const [acessToken, setAcessToken] = useState('');
 
     const handleManager = () => {
       setIsManager(!isManager);
     }
-
     const handleCPFInput = (keyEvent: KeyboardEvent) => {
         if (keyEvent.key != 'Backspace' && keyEvent.key != 'Tab' && keyEvent.key != 'Enter') {
             if (!/\d/.test(keyEvent.key)) {
@@ -52,6 +49,8 @@ const Home = () => {
     const handleSignIn = async (e: FormEvent) => {
         e.preventDefault();
 
+        if (!isManager) return;
+
         try {
             await signIn({cpf, password});
         } catch(err) {
@@ -61,6 +60,10 @@ const Home = () => {
 
     return (
         <div className={styles.container}>
+            <Head>
+                <title>Login | ÓpticoData</title>
+            </Head>
+            
             <div className={styles.logo}>
                 <img src="/logoopticodata.svg" alt="OpticoData" />
             </div>

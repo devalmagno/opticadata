@@ -80,9 +80,9 @@ class ManagersController {
         const managersService = new ManagersService();
 
         try {
-            const acessToken = await managersService.login(cpf, password);
+            const { acessToken, manager } = await managersService.login(cpf, password);
 
-            return res.status(200).json({ acessToken: acessToken });
+            return res.status(200).json({ acessToken, manager });
         } catch (err) {
             return res.status(401).json({
                 message: err.message
@@ -108,7 +108,23 @@ class ManagersController {
         }
     }
 
-    async authenticateToken(req: Request, res: Response, next: NextFunction) {
+    async authenticateToken(req: Request, res: Response) {
+        const { token } = req.body;
+
+        const managersService = new ManagersService();
+
+        if (token == null) return res.status(401).json({ message: "Token is null"});
+
+        try {
+            const manager = await managersService.authenticateToken(token);
+
+            res.status(200).json(manager);
+        } catch(err) {
+            res.status(401).json({ message: err.message });
+        }
+    }
+
+    async authorizationReq(req: Request, res: Response, next: NextFunction) {
         const authHeader = req.headers.authorization;
         const token = authHeader && authHeader.split(' ')[1];
 
@@ -117,7 +133,7 @@ class ManagersController {
         if (token == null) return res.status(401).json({ message: "Token is null"});
 
         try {
-            await managersService.authenticateToken(token);
+            await managersService.authorizationReq(token);
 
             next();
         } catch(err) {

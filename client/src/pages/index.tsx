@@ -10,10 +10,11 @@ const Home = () => {
     const cpfRef = useRef<HTMLInputElement>(null);
     const { signIn } = useContext(AuthContext);
 
-    const [isManager, setIsManager] = useState(false);
+    const [isManager, setIsManager] = useState(true);
     const [isCapsLockOn, setIsCapslockOn] = useState(false);
     const [isWord, setIsWord] = useState(false);
     const [error, setError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [cpf, setCpf] = useState('');
     const [password, setPassword] = useState('');
@@ -52,8 +53,12 @@ const Home = () => {
         if (!isManager) return;
 
         try {
+            setIsLoading(true);
+
             await signIn({cpf, password});
         } catch(err) {
+            setIsLoading(false);
+
             setError(true);
         }
     }
@@ -141,6 +146,12 @@ const Home = () => {
             <div className={styles.footer}>
                 Desenvolvido por
                 <img src="/logonorteminas.svg" alt="Norte Minas Soluções Digitais" />
+            </div>
+
+            <div className={isLoading ? `${styles.bg_modal} ${styles.active}` : styles.bg_modal}>
+                <div className={styles.modal_content}>
+                    <div className={styles.loader}></div>
+                </div>
             </div>
         </div>
     );

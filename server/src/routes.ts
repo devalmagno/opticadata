@@ -26,25 +26,26 @@ const ordersController = new OrdersController();
 // Routes for Managers
 routes.post("/managers/register", managersController.create);
 routes.post("/managers/login", managersController.login);
-routes.get("/managers/", managersController.getAllManagers);
-routes.get("/managers/:id", managersController.getManagerById);
-routes.put("/managers/:id", managersController.authenticateToken, managersController.updateManager);
-routes.put("/managers/password/:id", managersController.changePassword);
+routes.post("/managers/token", managersController.authenticateToken);
+routes.get("/managers/", managersController.authorizationReq,managersController.getAllManagers);
+routes.get("/managers/:id", managersController.authorizationReq, managersController.getManagerById);
+routes.put("/managers/:id", managersController.authorizationReq, managersController.updateManager);
+routes.put("/managers/password/:id", managersController.authorizationReq, managersController.changePassword);
 
 // Routes for Occupations
-routes.post("/occupations/register", occupationsController.create);
-routes.get("/occupations/", occupationsController.getOccupations);
-routes.put("/occupations/:id", occupationsController.updateOccupation);
-routes.delete("/occupations/:id", occupationsController.removeOccupation);
+routes.post("/occupations/register", managersController.authorizationReq, occupationsController.create);
+routes.get("/occupations/", managersController.authorizationReq, occupationsController.getOccupations);
+routes.put("/occupations/:id", managersController.authorizationReq, occupationsController.updateOccupation);
+routes.delete("/occupations/:id", managersController.authorizationReq, occupationsController.removeOccupation);
 
 // Routes for Workers
-routes.post("/workers/register", workersController.create);
+routes.post("/workers/register", managersController.authorizationReq, workersController.create);
 routes.post("/workers/login", workersController.login);
 routes.get("/workers/", workersController.getWorkers);
 routes.get("/workers/:id", /* workersController.authenticateToken, */ workersController.getWorkerById);
 routes.put("/workers/:id", workersController.updateWorker);
 routes.put("/workers/password/:id", workersController.changePassword);
-routes.delete("/workers/:id", workersController.removeWorker);
+routes.delete("/workers/:id", managersController.authorizationReq, workersController.removeWorker);
 
 // Routes for Customers
 routes.post("/customers/register", customersController.create);

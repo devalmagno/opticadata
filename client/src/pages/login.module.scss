@@ -155,6 +155,52 @@
     height: 5rem;
 }
 
+.bg_modal {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    position: absolute;
+    top: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+
+.bg_modal.active {
+    display: flex;
+}
+
+.bg_modal .modal_content {
+    width: 15rem;
+    height: 6rem;
+    border-radius: 1rem;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg_modal .modal_content .loader {
+    animation: is-rotating 1s infinite;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 6px solid #e5e5e5;
+    border-top-color: #51d4db;
+}
+
+@keyframes is-rotating {
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+
 @media screen and (max-width: 1000px) {
     .container {
         flex-direction: column;

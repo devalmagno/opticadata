@@ -107,9 +107,9 @@ class ManagersService {
 
         const manager = await this.ManagersRepository.findOne({ cpf });
 
-        const acessToken = jwt.sign({manager}, process.env.ACESS_TOKEN_SECRET, { expiresIn: '30m' });
+        const acessToken = jwt.sign({manager}, "" + process.env.ACESS_TOKEN_SECRET, { expiresIn: '30m' });
 
-        return acessToken;
+        return { acessToken, manager };
     }
 
     async changePassword(id: string, password: string, newPassword: string) {
@@ -140,11 +140,21 @@ class ManagersService {
     }
 
     async authenticateToken(token: string) {
-        jwt.verify(token, process.env.ACESS_TOKEN_SECRET, (err) => {
+        const manager = jwt.verify(token, "" + process.env.ACESS_TOKEN_SECRET, (err, manager) => {
+            if (err) throw new Error(err.message);
+
+            return manager;
+        });
+
+        return manager;
+    }
+
+    async authorizationReq(token: string) {
+        jwt.verify(token, "" + process.env.ACESS_TOKEN_SCRET, (err) => {
             if (err) throw new Error(err.message);
 
             return true;
-        });
+        })
     }
 }
 

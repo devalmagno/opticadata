@@ -1,11 +1,11 @@
 import Router from "next/router";
-import { createContext, ReactChild, ReactChildren, useEffect, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import { setCookie, parseCookies } from "nookies";
 
 import { api } from "../services/api";
 
 type AuxPropsType = {
-    children: ReactChild | ReactChildren;
+    children: ReactNode;
 }
 
 type SignInDataType = {

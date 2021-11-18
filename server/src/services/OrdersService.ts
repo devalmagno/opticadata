@@ -97,7 +97,7 @@ class OrdersService {
 
     async getOrders() {
         const orders = await this.ordersRepository.find();
-
+        
         if (!orders) throw new Error("There is no order in the database.");
 
         return orders;
@@ -131,7 +131,7 @@ class OrdersService {
 
         return orderInfo;
     }
-    
+
     async removeOrder(id: string) {
         const order = await this.ordersRepository.findOne({
             id
@@ -140,6 +140,10 @@ class OrdersService {
         if (!order) throw new Error("The order do not exists");
 
         await this.ordersRepository.remove(order);
+
+        const paymentsService = new PaymentsService();
+
+        await paymentsService.removePayment(order.payment_id);
 
         return order;
     }

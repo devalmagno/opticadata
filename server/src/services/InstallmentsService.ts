@@ -30,6 +30,12 @@ class InstallmentsService {
         return installment;
     }
 
+    async getInstallments() {
+        const installments = await this.installmentsRepository.find();
+
+        return installments;
+    }
+
     async getInstallmentsByPayment(payment_id: string) {
         const installments = await this.installmentsRepository.find({
             where: { payment_id }
@@ -40,16 +46,21 @@ class InstallmentsService {
 
     async getInstallmentsByDate(payment_date: Date) {
         const installments = await this.installmentsRepository.find({
-            where: { payment_date }
+            where: { 
+                payment_date,
+                status: false
+            }
         });
 
         return installments;
     }
 
-    async updateInstallment(id: string, status: boolean) {
+    async updateInstallment(id: string) {
         const installment = await this.installmentsRepository.findOne({
             id,
         });
+
+        const status = true;
 
         this.installmentsRepository.merge(installment, { status });
 

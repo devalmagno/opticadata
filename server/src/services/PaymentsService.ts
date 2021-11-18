@@ -42,6 +42,16 @@ class PaymentsService {
         
         return payment;
     }
+
+    async removePayment(id: string) {
+        const payment = await this.paymentsRepository.findOne({
+            id
+        });
+
+        await this.paymentsRepository.remove(payment);
+
+        return payment;
+    }
 }
 
 export { PaymentsService };

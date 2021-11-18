@@ -20,7 +20,7 @@ type Installments = {
 }
 
 export default function Header({ title }: Props) {
-    const [installments, setInstallments] = useState([]);
+    const [installments, setInstallments] = useState<Installments[]>([]);
     const [openBox, setOpenBox] = useState(false);
 
     useEffect(() => {
@@ -29,6 +29,8 @@ export default function Header({ title }: Props) {
                 setInstallments(response.data);
             })
     }, []);
+
+    console.log();
 
     return (
         <div className={styles.container}>
@@ -39,15 +41,15 @@ export default function Header({ title }: Props) {
                     `${styles.notification} ${styles.active}` 
                     : styles.notification 
                 }
-                onClick={() => { setOpenBox(!openBox) }}
+                onClick={() => { installments[0] && setOpenBox(!openBox) }}
             >
                 <FaBell className={installments[0] ? `${styles.cursorActive} ${styles.icon}` : styles.icon} />
             </div>
             <div className={openBox ? `${styles.box} ${styles.open}` : styles.box }>
                     <h4>Notificações</h4>
                     {
-                        installments.map(() => ( 
-                            <div className={styles.content}>
+                        installments.map(installment => ( 
+                            <div key={installment.id} className={styles.content}>
                                 <span>pagamento pendente marcado para hoje</span>
                             </div>
                         ))

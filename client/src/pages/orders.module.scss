@@ -1,0 +1,166 @@
+.container {
+    table {
+        border-collapse: collapse;
+        position: relative;
+    }
+
+    table::before {
+        content: '';
+        width: 100%;
+        height: 0.1rem;
+        box-shadow: 0 0.1rem 0.1rem rgba(3, 3, 3, 0.3);
+    
+        position: absolute;
+        bottom: 0;
+        border-radius: 0 0 50% 50%;
+    }
+
+    th {
+        color: var(--bg);
+        text-align: left;
+    }
+    
+    th, td {
+        padding: 0.4rem .8rem;
+        font-size: 1rem;
+    }
+    
+    tbody {
+        color: var(--subtitle);
+
+        tr {
+            position: relative;
+            text-align: left;
+
+            :nth-child(4) {
+                font-weight: 600;
+            }
+
+            :last-child {
+                text-align: center;
+
+                .tooltip {
+                    display: none;
+                    position: absolute;
+                    top: 0;
+                    right: 5rem;
+                    background: var(--bg-secondary);
+                    padding: 0.3rem .8rem;
+                    border-radius: 1rem;
+                    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+                    transition: all 0.3s ease;
+                    z-index: 99;
+
+                    span {
+                        font-size: 1rem;
+                        font-weight: 500;
+                    }
+                }
+
+                :hover {
+                    color: var(--purple-100);
+                }
+
+                :hover ~ .tooltip {
+                    display: block;
+                }
+            }
+
+            td {
+                .icon {
+                    font-size: 1.5rem;
+                    cursor: pointer;
+                }
+
+                :last-child {
+                    text-align: center;
+                }
+            }
+
+            .paid {
+                color: var(--green);
+            }
+        
+            .pending {
+                color: var(--red);
+            }
+        }
+    }
+
+    tbody tr:not(:first-child):after {
+        content: '';
+        width: 100%;
+        height: 0.1rem;
+        box-shadow: 0 0.1rem 0.1rem rgba(3, 3, 3, 0.3);
+
+        position: absolute;
+        left: 0;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .container {
+        // left: 4.5rem;
+        // width: calc(100% - 4.5rem);
+
+        table {
+            width: 100%;
+        }
+
+        thead {
+            display: none;
+        }
+
+        tbody tr::after {
+            display: none;
+        }
+    
+        td {
+            display: block;
+            
+            .icon {
+                display: none;
+            }
+        }
+    
+        td:first-child::before {
+            content: "Preço"
+        }
+    
+        td:nth-child(2)::before {
+            content: "Pagamento";
+        }
+    
+        td:nth-child(3)::before {
+            content: "Tipo";
+        }
+    
+        td:nth-child(4)::before {
+            content: "Status";
+            color: #333;
+        }
+    
+        td:nth-child(5)::before {
+            content: "Cliente";
+        }
+
+        td:nth-child(6)::before {
+            content: "Ver mais informações";
+            color: var(--bg-secondary);
+            background: var(--bg);
+            width: 100%;
+            padding: 0.4rem 0;
+            border-radius: 0.5rem;
+        } 
+    
+        td {
+            text-align: right;
+        }
+    
+        td::before {
+            float: left;
+            // margin-right: 3rem;
+            font-weight: bold;
+        }
+    }        
+}

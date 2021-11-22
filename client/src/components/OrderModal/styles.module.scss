@@ -1,0 +1,68 @@
+.bg_modal {
+    width: calc(100% + 6.5rem);
+    min-height: 100vh;
+    position: absolute;
+    top: -2rem;
+    right: 0;
+    z-index: 99;
+    
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .modal_content {
+        max-width: 50rem;
+        width: 100%;
+        height: 34rem;
+        background-color: var(--bg-secondary);
+        border-radius: 1rem;
+        text-align: center;
+        padding: 20px;
+        position: relative;
+    
+        .header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem;
+
+            .box_close {
+                width: 1.5rem;
+                height: 1.5rem;
+                position: relative;
+                cursor: pointer;
+
+                :first-child {
+                    transform: rotate(45deg);
+                }
+
+                :last-child {
+                    transform: rotate(-45deg);
+                }
+
+                .close {
+                    position: absolute;
+                    width: 100%;
+                    height: 2px;
+                    background: black;
+                    top: 50%;
+                    transition: background 0.3s;
+                }
+            }
+
+            .box_close:hover {
+                .close {
+                    background: var(--purple-100);
+                }
+            }
+        }
+    }
+
+    .container {
+        .infoTables table::before {
+            left: 0;
+        }
+    }
+}

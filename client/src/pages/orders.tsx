@@ -1,11 +1,16 @@
-import Header from "../components/Header";
-import { useFetch } from "../hooks/useFetch";
+import { useState } from "react";
+import { GetServerSideProps } from "next";
+import { parseCookies } from "nookies";
 
 import { BiInfoCircle } from "react-icons/bi";
 
+import { useFetch } from "../hooks/useFetch";
+
+import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
+
 import styles from "./orders.module.scss";
-import { GetServerSideProps } from "next";
-import { parseCookies } from "nookies";
+import OrderModal from "../components/OrderModal";
 
 type Order = {
     id: string;
@@ -13,14 +18,14 @@ type Order = {
     customer_id: string;
     created_at: Date;
     updated_at: Date;
-}
+};
 
 type Payment = {
     id: string;
     type_of_payment: string;
     created_at: Date;
     updated_at: Date;
-}
+};
 
 type Installment = {
     id: string;
@@ -30,79 +35,120 @@ type Installment = {
     status: boolean;
     created_at: Date;
     updated_at: Date;
-}
+};
+
+type Customer = {
+    cnpj: string;
+    cpf: string;
+    created_at: Date;
+    email: string;
+    id: string;
+    name: string;
+    phone: string;
+    updated_at: Date;
+};
+
+type Products = {
+    id: string;
+    order_id: string;
+    product_id: string;
+    quantity: number;
+    created_at: Date;
+};
+
+type Workers = {
+    id: string;
+    worker_id: string;
+    created_at: string;
+    order_id: string;
+};
+
+export type OrderInfo = {
+    order: Order;
+    payment: Payment;
+    customer: Customer;
+    fullPrice: number;
+    installment: Installment[];
+    products: Products[];
+    workers: Workers[];
+};
 
 export default function Orders() {
-    const { data: orders } = useFetch<Order[]>('/orders');
-    const { data: payments } = useFetch<Payment[]>('/payments');
-    const { data: installments } = useFetch<Installment[]>('/installments');
+    const [showModal, setShowModal] = useState(false);
+    const [currentOrder, setCurrentOrder] = useState<OrderInfo>();
 
-    if (!orders || !payments || !installments) return (<h1>Loading...</h1>)
+    const { data: orderInfo } = useFetch<OrderInfo[]>("/orders");
 
-    const orderInfo = 
-        orders?.map(order => {
-            let fullPrice = 0;
+    if (!orderInfo) return <h1>Loading...</h1>;
 
-            installments.map(installment => {
-                if (installment.payment_id == order.payment_id)
-                    fullPrice += installment.price;
-            });
+    orderInfo.map((info) => {
+        info.fullPrice = info.installment[0].price * info.installment.length;
+    });
 
-            return {
-                order,
-                payment: payments?.find(payment => payment.id == order.payment_id),
-                fullPrice,
-                installments: installments?.filter(installment => {
-                    if (installment.payment_id == order.payment_id)
-                        return installment;
-                    else return;
-                })
-            }
-        });
+    function handleModal(info: OrderInfo) {
+        setCurrentOrder(info);
+        setShowModal(!showModal);
+    }
 
     return (
-        <section>
+        <div className={styles.container}>
             <Header title="Vendas" />
 
-            <main className={styles.container}>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Preço</th>
-                            <th>Pagamento</th>
-                            <th>Tipo de pagamento</th>
-                            <th>Status</th>
-                            <th>Cliente</th>
-                            <th>Sobre</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            orderInfo?.map(info => (
-                                <tr>
-                                    <td>
-                                       R$ {info.fullPrice}
-                                    </td>
-                                    <td>
-                                        {info.payment?.type_of_payment}
-                                    </td>
-                                    <td>
-                                        {info.installments.length > 1 ? 'parcelado' : 'à vista'}
-                                    </td>
-                                    <td>
-                                        {info.installments[0].status ? 'Pago' : 'Pendente'}
-                                    </td>
-                                    <td></td>
-                                    <td>
-                                        <BiInfoCircle />
-                                    </td>
-                                </tr>
-                            ))
-                        }
-                    </tbody>
-                </table>
-            </main>
-        </section>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Preço</th>
+                        <th>Pagamento</th>
+                        <th>Tipo de pagamento</th>
+                        <th>Status</th>
+                        <th>Cliente</th>
+                        <th>Sobre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {orderInfo.map((info) => {
+                        return (
+                            <tr key={info.order.id}>
+                                <td>R$ {info.fullPrice.toFixed(2)}</td>
+                                <td>{info.payment.type_of_payment}</td>
+                                <td>
+                                    {info.installment.length > 1
+                                        ? "parcelado"
+                                        : "à vista"}
+                                </td>
+                                <td
+                                    className={
+                                        info.installment[0].status
+                                            ? styles.paid
+                                            : styles.pending
+                                    }
+                                >
+                                    {info.installment[0].status
+                                        ? "Pago"
+                                        : "Pendente"}
+                                </td>
+                                <td>
+                                    {info.customer ? info.customer.name : " "}
+                                </td>
+                                <td
+                                    onClick={() => { handleModal(info) }}
+                                >
+                                    <BiInfoCircle className={styles.icon} />
+                                    <div className={styles.tooltip}>
+                                        <span>Informações e Remoção</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+            <OrderModal 
+                showModal={showModal} 
+                setShowModal={setShowModal}
+                currentOrder={currentOrder!} 
+            />
+        </div>
     );
 }
 

@@ -8,7 +8,7 @@ import styles from "./dashboard.module.scss";
 const Dashboard = () => {
     return (
         <section className={styles.dashboard}>
-            <Header title="Dashboard"/>            
+            <Header title="Dashboard" />
         </section>
     );
 };

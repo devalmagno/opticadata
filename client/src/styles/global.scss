@@ -33,6 +33,7 @@
 body {
     position: relative;
     background: var(--bg-secondary);
+    overflow-x: hidden;
 }
 
 body, input, textarea, button {

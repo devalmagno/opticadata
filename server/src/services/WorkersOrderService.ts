@@ -25,6 +25,14 @@ class WorkersOrderService {
         return workerOrder;
     }
 
+    async getWorkersOrder() {
+        const workersOrder = await this.workersOrderRepository.find();
+
+        if (!workersOrder) throw new Error("There is no order in the database");
+
+        return workersOrder;
+    }
+
     async getWorkersOrderByOrderId(order_id: string) {
         const workerOrder = this.workersOrderRepository.find({
             where: { order_id },

@@ -10,6 +10,7 @@ type Props = {
 };
 
 const OrderModal = ({ showModal, setShowModal, currentOrder }: Props) => {
+
     return (
         <>
             {showModal && (
@@ -38,10 +39,10 @@ const OrderModal = ({ showModal, setShowModal, currentOrder }: Props) => {
                                 </thead>
                                 <tbody>
                                     {currentOrder.products.map(product => (
-                                        <tr>
-                                            <td></td>
+                                        <tr key={product.id}>
+                                            <td>{product.name}</td>
                                             <td>{product.quantity}</td>
-                                            <td></td>
+                                            <td>R$ {product.price.toFixed(2)}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -50,10 +51,17 @@ const OrderModal = ({ showModal, setShowModal, currentOrder }: Props) => {
                                 <thead>
                                     <tr>
                                         <th>Funcionário</th>
-                                        <th>Quantidade</th>
+                                        <th>Cargo</th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                    {currentOrder.workers.map(worker => (
+                                        <tr key={worker.id}>
+                                            <td>{worker.name}</td>
+                                            <td>{worker.occupation}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
                             </table>
                         </div>
                         <div className={styles.info}></div>

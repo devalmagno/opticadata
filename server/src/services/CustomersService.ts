@@ -40,6 +40,14 @@ class CustomersService {
         return customer;
     }
 
+    async getCustomers() {
+        const customers = await this.customersRepository.find();
+
+        if (!customers) throw new Error("There is no customer registered in the database.");
+
+        return customers;
+    }
+
     async getCustomer(email: string) {
         const customer = await this.customersRepository.findOne({
             email

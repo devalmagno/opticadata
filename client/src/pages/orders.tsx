@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
 
@@ -20,13 +20,6 @@ type Order = {
     updated_at: Date;
 };
 
-type Payment = {
-    id: string;
-    type_of_payment: string;
-    created_at: Date;
-    updated_at: Date;
-};
-
 type Installment = {
     id: string;
     payment_date: Date;
@@ -37,36 +30,23 @@ type Installment = {
     updated_at: Date;
 };
 
-type Customer = {
-    cnpj: string;
-    cpf: string;
-    created_at: Date;
-    email: string;
-    id: string;
-    name: string;
-    phone: string;
-    updated_at: Date;
-};
-
 type Products = {
     id: string;
-    order_id: string;
-    product_id: string;
     quantity: number;
-    created_at: Date;
+    name: string;
+    price: number;
 };
 
 type Workers = {
     id: string;
-    worker_id: string;
-    created_at: string;
-    order_id: string;
+    name: string;
+    occupation: string;
 };
 
 export type OrderInfo = {
     order: Order;
-    payment: Payment;
-    customer: Customer;
+    payment: string;
+    customer: string;
     fullPrice: number;
     installment: Installment[];
     products: Products[];
@@ -110,7 +90,7 @@ export default function Orders() {
                         return (
                             <tr key={info.order.id}>
                                 <td>R$ {info.fullPrice.toFixed(2)}</td>
-                                <td>{info.payment.type_of_payment}</td>
+                                <td>{info.payment}</td>
                                 <td>
                                     {info.installment.length > 1
                                         ? "parcelado"
@@ -128,7 +108,7 @@ export default function Orders() {
                                         : "Pendente"}
                                 </td>
                                 <td>
-                                    {info.customer ? info.customer.name : " "}
+                                    {info.customer}
                                 </td>
                                 <td
                                     onClick={() => { handleModal(info) }}
@@ -143,11 +123,11 @@ export default function Orders() {
                     })}
                 </tbody>
             </table>
-            <OrderModal 
+            {showModal ? <OrderModal 
                 showModal={showModal} 
                 setShowModal={setShowModal}
                 currentOrder={currentOrder!} 
-            />
+            /> : ''}
         </div>
     );
 }

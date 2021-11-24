@@ -28,6 +28,14 @@ class ProductsOrderService {
         return productOrder;
     }
 
+    async getProductsOrder() {
+        const productsOrder = await this.productsOrderRepository.find();
+
+        if (!productsOrder) throw new Error("There is no order in the database");
+
+        return productsOrder;
+    }
+
     async getProductOrderByOrderId(order_id: string) {
         const productOrder = this.productsOrderRepository.find({
             where: { order_id },

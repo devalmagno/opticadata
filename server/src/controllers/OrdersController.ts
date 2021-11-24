@@ -47,6 +47,18 @@ class OrdersController {
         }
     }
 
+    async getFullOrderInfo(req: Request, res: Response) {
+        const ordersService = new OrdersService();
+
+        try {
+            const info = await ordersService.getFullOrderInfo();
+
+            return res.status(200).json(info);
+        } catch(err) {
+            return res.status(400).json({ message: err.message });
+        }
+    }
+
     async getOrdersById(req: Request, res: Response) {
         const { id } = req.params;
 

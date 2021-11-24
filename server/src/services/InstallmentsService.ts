@@ -33,6 +33,8 @@ class InstallmentsService {
     async getInstallments() {
         const installments = await this.installmentsRepository.find();
 
+        if (!installments) throw new Error("There is no order in the database");
+
         return installments;
     }
 

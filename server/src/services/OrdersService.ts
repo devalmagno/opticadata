@@ -2,10 +2,14 @@ import { getCustomRepository, Repository } from "typeorm";
 
 import { Order } from "../entities/Order";
 import { OrdersRepository } from "../repositories/OrdersRepository";
+import { CustomersService } from "./CustomersService";
 import { InstallmentsService } from "./InstallmentsService";
+import { OccupationsService } from "./OccupationsService";
 import { PaymentsService } from "./PaymentsService";
 import { ProductsOrderService } from "./ProductsOrderService";
+import { ProductsService } from "./ProductsService";
 import { WorkersOrderService } from "./WorkersOrderService";
+import { WorkersService } from "./WorkersService";
 
 interface IOrdersCreate {
     id?: string;
@@ -101,6 +105,68 @@ class OrdersService {
         if (!orders) throw new Error("There is no order in the database.");
 
         return orders;
+    }
+
+    async getFullOrderInfo() {
+        const orders = await this.ordersRepository.find();
+
+        if (!orders) throw new Error("There is no order in the database.");
+
+        const paymentsService = new PaymentsService();
+        const installmentsService = new InstallmentsService();
+        const productsOrderService = new ProductsOrderService();
+        const workersOrderService = new WorkersOrderService();
+        const customersService = new CustomersService();
+        const productsService = new ProductsService();
+        const workersService = new WorkersService();
+        const occupationsService = new OccupationsService();
+
+        const payments = await paymentsService.getPayments();
+        const installments = await installmentsService.getInstallments();
+        const customers = await customersService.getCustomers();
+        const productsOrder = await productsOrderService.getProductsOrder();
+        const workersOrder = await workersOrderService.getWorkersOrder();
+        const products = await productsService.getProducts();
+        const workers = await workersService.getWorkers();
+        const occupations = await occupationsService.getOccupations();
+
+        console.log(occupations);
+
+        const fullOrder = orders.map(order => {
+            return {
+                order,
+                payment: payments.filter(payment => payment.id == order.payment_id).map(payment => payment.type_of_payment),
+                installment: installments.filter(installment => installment.payment_id == order.payment_id),
+                customer: customers.filter(customer => customer.id == order.customer_id).map(customer => customer.name),
+                products: productsOrder.filter(product => product.order_id == order.id).map(productOrder => {
+                    const productInfo = {
+                        id: products.filter(product => product.id == productOrder.product_id).map(product => product.id)[0],
+                        quantity: productOrder.quantity,
+                        name: products.filter(product => product.id == productOrder.product_id).map(product => product.name)[0],
+                        price: products.filter(product => product.id == productOrder.product_id).map(product => product.unit_price)[0]
+                    }
+
+                    return productInfo;
+                }),
+                workers: workersOrder.filter(worker => worker.order_id == order.id).map(workerOrder => {
+                    const workerInfo = {
+                        id: workers.filter(worker => worker.id == workerOrder.worker_id).map(worker => worker.id)[0],
+                        name:  workers.filter(worker => worker.id == workerOrder.worker_id).map(worker => worker.name)[0],
+                        occupation: workers.filter(worker => worker.id == workerOrder.worker_id).map(worker => {
+                            const occupation = occupations.filter(occupation => occupation.id == worker.occupation_id);
+
+                            return occupation;
+                        })
+                    }
+
+                    return workerInfo;
+                })
+            }
+        });
+
+        // console.log(fullOrder[0].workers);
+
+        return fullOrder;
     }
 
     async getOrderById(id: string) {

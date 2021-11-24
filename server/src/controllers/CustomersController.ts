@@ -23,6 +23,18 @@ class CustomersController {
         }
     }
 
+    async getCustomers(req: Request, res: Response) {
+        const customersService = new CustomersService();
+        
+        try {
+            const customers = await customersService.getCustomers();
+
+            return res.status(200).json(customers);
+        } catch (err) {
+            return res.status(400).json({ message: err.message });
+        }
+    }
+
     async getByEmail(req: Request, res: Response) {
         const { email } = req.params;
 

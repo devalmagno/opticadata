@@ -52,6 +52,7 @@ routes.put("/workers/password/:id", workersController.changePassword);
 routes.delete("/workers/:id", managersController.authorizationReq, workersController.removeWorker);
 
 // Routes for Customers
+routes.get("/customers", customersController.getCustomers);
 routes.post("/customers/register", customersController.create);
 routes.get("/customers/:email", customersController.getByEmail);
 routes.delete("/customers/:email", customersController.removeByEmail);
@@ -83,7 +84,7 @@ routes.get("/stock/product", stockController.getStocksByProduct);
 
 // Routes for Orders
 routes.post("/orders", ordersController.create);
-routes.get("/orders", ordersController.getOrders);
+routes.get("/orders", ordersController.getFullOrderInfo);
 routes.get("/orders/:id", ordersController.getOrdersById);
 routes.delete("/orders/:id", ordersController.removeOrder);
 

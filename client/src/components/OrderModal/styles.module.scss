@@ -58,11 +58,24 @@
                 }
             }
         }
-    }
 
     .container {
-        .infoTables table::before {
-            left: 0;
+        .infoTables {
+            width: 19rem;
+
+            table::before {
+                left: 0;
+            }
+
+            .workers {
+                width: 100%;
+                margin-top: 2rem;
+
+                td {
+                    text-align: left;
+                }
+            }
         }
     }
-}
+
+}}

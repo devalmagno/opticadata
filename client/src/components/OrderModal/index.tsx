@@ -47,10 +47,11 @@ const OrderModal = ({ showModal, setShowModal, currentOrder }: Props) => {
                                     ))}
                                 </tbody>
                             </table>
-                            <table>
+                            <table className={styles.workers}>
                                 <thead>
                                     <tr>
                                         <th>Funcionário</th>
+                                        <th></th>
                                         <th>Cargo</th>
                                     </tr>
                                 </thead>
@@ -58,13 +59,16 @@ const OrderModal = ({ showModal, setShowModal, currentOrder }: Props) => {
                                     {currentOrder.workers.map(worker => (
                                         <tr key={worker.id}>
                                             <td>{worker.name}</td>
+                                            <td></td>
                                             <td>{worker.occupation}</td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         </div>
-                        <div className={styles.info}></div>
+                        <div className={styles.info}>
+                            
+                        </div>
                     </div>
                 </div>
                 </div>

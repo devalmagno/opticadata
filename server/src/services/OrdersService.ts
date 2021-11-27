@@ -130,8 +130,6 @@ class OrdersService {
         const workers = await workersService.getWorkers();
         const occupations = await occupationsService.getOccupations();
 
-        console.log(occupations);
-
         const fullOrder = orders.map(order => {
             return {
                 order,
@@ -152,19 +150,13 @@ class OrdersService {
                     const workerInfo = {
                         id: workers.filter(worker => worker.id == workerOrder.worker_id).map(worker => worker.id)[0],
                         name:  workers.filter(worker => worker.id == workerOrder.worker_id).map(worker => worker.name)[0],
-                        occupation: workers.filter(worker => worker.id == workerOrder.worker_id).map(worker => {
-                            const occupation = occupations.filter(occupation => occupation.id == worker.occupation_id);
-
-                            return occupation;
-                        })
+                        occupation: occupations.filter(occupation => occupation.id == workers.filter(worker => worker.id == workerOrder.worker_id)[0].occupation_id)[0]?.name,
                     }
 
                     return workerInfo;
                 })
             }
         });
-
-        // console.log(fullOrder[0].workers);
 
         return fullOrder;
     }

@@ -37,13 +37,13 @@ routes.put("/managers/:id", managersController.authorizationReq, managersControl
 routes.put("/managers/password/:id", managersController.authorizationReq, managersController.changePassword);
 
 // Routes for Occupations
-routes.post("/occupations/register", managersController.authorizationReq, occupationsController.create);
-routes.get("/occupations/", managersController.authorizationReq, occupationsController.getOccupations);
-routes.put("/occupations/:id", managersController.authorizationReq, occupationsController.updateOccupation);
-routes.delete("/occupations/:id", managersController.authorizationReq, occupationsController.removeOccupation);
+routes.post("/occupations/register",  occupationsController.create);
+routes.get("/occupations/",  occupationsController.getOccupations);
+routes.put("/occupations/:id",  occupationsController.updateOccupation);
+routes.delete("/occupations/:id",  occupationsController.removeOccupation);
 
 // Routes for Workers
-routes.post("/workers/register", managersController.authorizationReq, workersController.create);
+routes.post("/workers/register", workersController.create);
 routes.post("/workers/login", workersController.login);
 routes.get("/workers/", workersController.getWorkers);
 routes.get("/workers/:id", /* workersController.authenticateToken, */ workersController.getWorkerById);

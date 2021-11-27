@@ -86,7 +86,7 @@ export default function Orders() {
                     </tr>
                 </thead>
                 <tbody>
-                    {orderInfo.map((info) => {
+                    {orderInfo.slice(0).reverse().map((info) => {
                         return (
                             <tr key={info.order.id}>
                                 <td>R$ {info.fullPrice.toFixed(2)}</td>

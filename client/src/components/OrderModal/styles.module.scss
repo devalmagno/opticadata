@@ -14,7 +14,7 @@
     .modal_content {
         max-width: 50rem;
         width: 100%;
-        height: 34rem;
+        min-height: 30rem;
         background-color: var(--bg-secondary);
         border-radius: 1rem;
         text-align: center;
@@ -60,6 +60,9 @@
         }
 
     .container {
+        display: flex;
+        justify-content: space-between;
+        
         .infoTables {
             width: 19rem;
 
@@ -73,6 +76,181 @@
 
                 td {
                     text-align: left;
+                }
+            }
+
+            .quantity {
+                text-align: center;
+            }
+        }
+
+        .info {
+            max-width: 55%;
+            width: 100%;
+            height: auto;
+            display: grid;
+            grid-template: 
+                "status payment"
+                "type installmentPrice"
+                "price price"
+                "installments installments"
+                "button button"
+            ;
+            row-gap: 1rem;
+
+            .container {
+                height: 3rem;
+                color: var(--bg);
+                display: flex;
+                flex-direction: column;
+                text-align: left;
+
+                span {
+                    font-size: 0.9rem;
+                }
+
+                .paid {
+                    color: var(--green);
+                }
+
+                .pending {
+                    color: var(--red);
+                }
+            }
+
+            :nth-child(1) {
+                grid-area: status;
+            }
+
+            :nth-child(2) {
+                grid-area: payment;
+            }
+
+            :nth-child(3) {
+                grid-area: type;
+            }
+
+            :nth-child(4) {
+                grid-area: installmentPrice;
+            }
+
+            :nth-child(5) {
+                flex-direction: row;
+                grid-area: price;
+                justify-self: start;
+
+                span {
+                    margin-left: 0.5rem;
+                    font-size: 1rem;
+                }
+            }
+
+            .installments {
+                height: 6.5rem;
+                margin-top: -1.5rem;
+                color: var(--bg);
+                grid-area: installments;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: space-between;
+
+                .boxContainer {
+                    display: flex;
+                    column-gap: 1rem;
+
+                    .box {
+                        position: relative;
+                        width: 2.5rem;
+                        height: 2.5rem;
+                        border-radius: 0.5rem;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        cursor: pointer;
+    
+                        strong {
+                            font-size: 1.25rem;
+                        }
+    
+                        .tooltip {
+                            position: absolute;
+                            top: -1.2rem;
+                            left: 1.25rem;
+                            background: var(--bg-secondary);
+                            padding: 0.4rem 0.8rem;
+                            border-radius: 0.8rem;
+                            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+                            font-size: 0.9rem;
+                            font-weight: 500;
+                            opacity: 0;
+                            transition: all 0.3s ease;
+                            z-index: 99;
+                        }
+                    }
+    
+                    .box:hover .tooltip {
+                        opacity: 100;
+                    }
+
+                    .box.insPaid {
+                        border: 0.1125rem solid var(--green);
+
+                        strong {
+                            color: var(--green);
+                        }
+                    }
+
+                    .box.insPending {
+                        border: 0.1125rem solid var(--red);
+
+                        strong {
+                            color: var(--red);
+                        }
+                    }
+                }
+
+                span {
+                    font-size: 0.8rem;
+                    color: var(--subtitle);
+                }
+            }
+
+            .button {
+                grid-area: button;
+                display: flex;
+
+                button {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    position: relative;
+                    width: 70%;
+                    padding: 0.8rem 0;
+                    border: 0;
+                    border-radius: 0.4rem;
+                    background: var(--red);
+                    font-size: 1rem;
+                    font-weight: 500;
+                    color: var(--bg-secondary);
+                    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+                    letter-spacing: 1px;
+                    transition: all 0.3s ease;
+
+                    .icon {
+                        position: absolute;
+                        right: 1rem;
+                        font-size: 1.2rem;
+                    }
+                }
+
+                button:hover {
+                    background: var(--red-hover);
+                }
+
+                button:focus {
+                    background: var(--red-focus);
                 }
             }
         }

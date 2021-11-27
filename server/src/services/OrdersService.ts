@@ -134,7 +134,16 @@ class OrdersService {
             return {
                 order,
                 payment: payments.filter(payment => payment.id == order.payment_id).map(payment => payment.type_of_payment),
-                installment: installments.filter(installment => installment.payment_id == order.payment_id),
+                installment: installments.filter(installment => installment.payment_id == order.payment_id).map(ins => {
+                    const formatedInstallment = {
+                        id: ins.id,
+                        date: ins.payment_date.toLocaleDateString("pt-BR"),
+                        price: ins.price,
+                        status: ins.status
+                    }
+
+                    return formatedInstallment;
+                }),
                 customer: customers.filter(customer => customer.id == order.customer_id).map(customer => customer.name),
                 products: productsOrder.filter(product => product.order_id == order.id).map(productOrder => {
                     const productInfo = {

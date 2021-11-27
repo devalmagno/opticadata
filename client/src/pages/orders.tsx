@@ -22,12 +22,9 @@ type Order = {
 
 type Installment = {
     id: string;
-    payment_date: Date;
-    payment_id: string;
+    date: Date;
     price: number;
     status: boolean;
-    created_at: Date;
-    updated_at: Date;
 };
 
 type Products = {

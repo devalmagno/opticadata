@@ -20,7 +20,7 @@ type Order = {
     updated_at: Date;
 };
 
-type Installment = {
+export type Installment = {
     id: string;
     date: Date;
     price: number;

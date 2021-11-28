@@ -2,7 +2,10 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { IoMdTrash } from "react-icons/io";
 import styles from "./styles.module.scss";
 
+import PaymentModal from "../PaymentModal";
+
 import { OrderInfo } from "../../pages/orders";
+import { Installment } from "../../pages/orders";
 
 type Props = {
     showModal: boolean;
@@ -12,14 +15,23 @@ type Props = {
 
 const OrderModal = ({ showModal, setShowModal, currentOrder }: Props) => {
     const [paymentStatus, setPaymentStatus] = useState(false);
+    const [showPaymentModal, setShowPaymentModal] = useState(false);
+    const [currentInstallment, setCurrentInstallment] = useState<Installment>();
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-    useEffect(() => {
-        const status = currentOrder.installment.map((ins) => ins.status);
+    // useEffect(() => {
+    //     const status = currentOrder.installment.map((ins) => ins.status).includes(false);
 
-        if (status.includes(false)) return;
+    //     if (status.includes(false)) return;
 
-        setPaymentStatus(true);
-    }, []);
+    //     setPaymentStatus(true);
+    // }, []);
+
+    const handleInstallment = (ins: Installment, index: number) => {
+        setCurrentInstallment(ins);
+        setCurrentIndex(index);
+        setShowPaymentModal(!showPaymentModal);
+    }
 
     return (
         <>
@@ -92,15 +104,17 @@ const OrderModal = ({ showModal, setShowModal, currentOrder }: Props) => {
                             <div className={styles.info}>
                                 <div className={styles.container}>
                                     <strong>Status do pagamento</strong>
-                                    {paymentStatus ? (
-                                        <strong className={styles.paid}>
-                                            PAGO
-                                        </strong>
-                                    ) : (
+                                    {currentOrder.installment.map((ins) => ins.status).includes(false) ? (
                                         <strong className={styles.pending}>
                                             PENDENTE
                                         </strong>
-                                    )}
+                                    ) : 
+                                    (
+                                        <strong className={styles.paid}>
+                                            PAGO
+                                        </strong>
+                                    )
+                                    }
                                 </div>
                                 <div className={styles.container}>
                                     <strong>Pagamento</strong>
@@ -138,11 +152,14 @@ const OrderModal = ({ showModal, setShowModal, currentOrder }: Props) => {
                                     <strong>Parcelas</strong>
 
                                     <div className={styles.boxContainer}>
-                                        {currentOrder.installment.map(
+                                        {currentOrder.installment.slice(0).reverse().map(
                                             (ins, index) => (
                                                 <div
                                                     key={ins.id}
                                                     className={ins.status ? `${styles.box} ${styles.insPaid}` : `${styles.box} ${styles.insPending}`}
+                                                    onClick={() => {
+                                                        handleInstallment(ins, index)
+                                                    }}
                                                 >
                                                     <strong>{index + 1}</strong>
 
@@ -174,6 +191,17 @@ const OrderModal = ({ showModal, setShowModal, currentOrder }: Props) => {
                             </div>
                         </div>
                     </div>
+
+                    {showPaymentModal ? 
+                        <PaymentModal 
+                            showModal={showPaymentModal}
+                            setShowModal={setShowPaymentModal}
+                            installment={currentInstallment!}
+                            index={currentIndex}
+                        />
+                        :
+                        ''
+                    }
                 </div>
             )}
         </>

@@ -46,11 +46,12 @@ class InstallmentsController {
 
     async updateInstallment(req: Request, res: Response) {
         const { id } = req.params;
+        const { status } = req.body;
 
         const installmentsService = new InstallmentsService();
 
         try {
-            const installment = await installmentsService.updateInstallment(id);
+            const installment = await installmentsService.updateInstallment(id, status);
 
             return res.status(200).json(installment);
         } catch(err) {

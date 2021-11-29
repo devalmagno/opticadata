@@ -31,7 +31,7 @@ const installmentsController = new InstallmentsController();
 routes.post("/managers/register", managersController.create);
 routes.post("/managers/login", managersController.login);
 routes.post("/managers/token", managersController.authenticateToken);
-routes.get("/managers/", managersController.authorizationReq,managersController.getAllManagers);
+routes.get("/managers/", managersController.getAllManagers);
 routes.get("/managers/:id", managersController.authorizationReq, managersController.getManagerById);
 routes.put("/managers/:id", managersController.authorizationReq, managersController.updateManager);
 routes.put("/managers/password/:id", managersController.authorizationReq, managersController.changePassword);

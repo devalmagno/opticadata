@@ -38,7 +38,7 @@ class WorkersController {
         const workersService = new WorkersService();
 
         try {
-            const workers = await workersService.getWorkers();
+            const workers = await workersService.getWorkersInfo();
 
             return res.status(200).json(workers);
         } catch(err) {

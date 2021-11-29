@@ -6,6 +6,7 @@ import PaymentModal from "../PaymentModal";
 
 import { OrderInfo } from "../../pages/orders";
 import { Installment } from "../../pages/orders";
+import RemoveModal from "../RemoveModal";
 
 type Props = {
     showModal: boolean;
@@ -16,6 +17,7 @@ type Props = {
 const OrderModal = ({ showModal, setShowModal, currentOrder }: Props) => {
     const [paymentStatus, setPaymentStatus] = useState(false);
     const [showPaymentModal, setShowPaymentModal] = useState(false);
+    const [showRemoveModal, setShowRemoveModal] = useState(false);
     const [currentInstallment, setCurrentInstallment] = useState<Installment>();
     const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -183,7 +185,11 @@ const OrderModal = ({ showModal, setShowModal, currentOrder }: Props) => {
                                 </div>
 
                                 <div className={styles.button}>
-                                    <button>
+                                    <button
+                                        onClick={() => {
+                                            setShowRemoveModal(!showRemoveModal)
+                                        }}
+                                    >
                                         Remover venda
                                         <IoMdTrash className={styles.icon} />
                                     </button>
@@ -198,6 +204,17 @@ const OrderModal = ({ showModal, setShowModal, currentOrder }: Props) => {
                             setShowModal={setShowPaymentModal}
                             installment={currentInstallment!}
                             index={currentIndex}
+                        />
+                        :
+                        ''
+                    }
+
+                    {showRemoveModal ?
+                        <RemoveModal 
+                            showModal={showRemoveModal}
+                            setShowModal={setShowRemoveModal}
+                            setShowOrderModal={setShowModal}
+                            order={currentOrder.order}
                         />
                         :
                         ''

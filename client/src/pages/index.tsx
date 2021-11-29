@@ -4,7 +4,7 @@ import { parseCookies } from "nookies";
 import { FormEvent, KeyboardEvent, useContext, useRef, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 
-import styles from "./login.module.scss";
+import styles from "../styles/login.module.scss";
 
 const Home = () => {
     const cpfRef = useRef<HTMLInputElement>(null);

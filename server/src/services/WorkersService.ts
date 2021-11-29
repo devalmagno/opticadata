@@ -3,8 +3,11 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 import { Worker } from "../entities/Worker";
+
 import { WorkersRepository } from "../repositories/WorkersRepository";
+
 import { OccupationsService } from "./OccupationsService";
+import { WorkersOrderService } from "./WorkersOrderService";
 
 interface IWorkersCreate {
     id?: string;
@@ -59,6 +62,38 @@ class WorkersService {
         }
 
         return workers;
+    }
+
+    async getWorkersInfo() {
+        const workers = await this.WorkersRepository.find();
+
+        if (!workers) throw new Error("There is no worker in the database, please create an worker before doing this operation.");
+
+        const occupationsService = new OccupationsService;
+        const workersOrderService = new WorkersOrderService;
+
+        const occupations = await occupationsService.getOccupations();
+        const workersOrder = await workersOrderService.getWorkersOrder();
+
+        const workersInfo = workers.map(worker => {
+            const sales = workersOrder.filter(order => order.worker_id == worker.id).length;
+            const occupation = occupations.filter(occ => occ.id == worker.occupation_id);
+
+            return {
+                id: worker.id,
+                name: worker.name,
+                email: worker.email,
+                cpf: worker.cpf,
+                phone: worker.phone,
+                occupation: {
+                    id: worker.occupation_id,
+                    name: occupation.filter(occ => occ.name != undefined).map(occ => occ.name)[0],
+                },
+                sales
+            }
+        });
+
+        return workersInfo;
     }
 
     async getWorkerById(id: string) {

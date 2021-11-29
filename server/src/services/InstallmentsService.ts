@@ -57,12 +57,10 @@ class InstallmentsService {
         return installments;
     }
 
-    async updateInstallment(id: string) {
+    async updateInstallment(id: string, status: boolean) {
         const installment = await this.installmentsRepository.findOne({
             id,
         });
-
-        const status = true;
 
         this.installmentsRepository.merge(installment, { status });
 

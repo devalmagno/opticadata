@@ -3,7 +3,7 @@ import { parseCookies } from "nookies";
 
 import Header from "../components/Header";
 
-import styles from "./dashboard.module.scss";
+import styles from "../styles/dashboard.module.scss";
 
 const Dashboard = () => {
     return (

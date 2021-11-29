@@ -7,12 +7,12 @@ import { BiInfoCircle } from "react-icons/bi";
 import { useFetch } from "../hooks/useFetch";
 
 import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
-
-import styles from "./orders.module.scss";
 import OrderModal from "../components/OrderModal";
 
-type Order = {
+import styles from "../styles/orders.module.scss";
+
+
+export type Order = {
     id: string;
     payment_id: string;
     customer_id: string;

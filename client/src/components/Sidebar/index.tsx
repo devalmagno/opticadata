@@ -61,11 +61,15 @@ const Sidebar = () => {
                     <span className={styles.tooltip}>Dashboard</span>
                 </li>
                 <li>
+                    <Link href="/users">
+
                     <a href="#">
                         <FaUser className={styles.icons} />
-                        <span className={styles.links_name}>Funcionários</span>
+                        <span className={styles.links_name}>Usuários</span>
                     </a>
-                    <span className={styles.tooltip}>Funcionários</span>
+                    </Link>
+
+                    <span className={styles.tooltip}>Usuários</span>
                 </li>
                 <li>
                     <Link href="/orders">
@@ -77,10 +81,10 @@ const Sidebar = () => {
                     <span className={styles.tooltip}>Vendas</span>
                 </li>
                 <li>
-                    <a href="#">
-                        <AiOutlineDropbox className={styles.icons} />
-                        <span className={styles.links_name}>Estoque</span>
-                    </a>
+                        <a>
+                            <AiOutlineDropbox className={styles.icons} />
+                            <span className={styles.links_name}>Estoque</span>
+                        </a>
                     <span className={styles.tooltip}>Estoque</span>
                 </li>
                 <li>

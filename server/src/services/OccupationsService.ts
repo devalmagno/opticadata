@@ -41,7 +41,14 @@ class OccupationsService {
             throw new Error("There is no occupation in the database, please create an occupation before doing this operation.");
         }
 
-        return occupations;
+        const occupationsInfo = occupations.map(occ => {
+            return {
+                id: occ.id,
+                name: occ.name
+            }
+        });
+
+        return occupationsInfo;
     }
 
     async getOccupationById(id: string) {

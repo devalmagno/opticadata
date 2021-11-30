@@ -15,7 +15,7 @@ class OccupationsController {
         try {
             const occupation = await occupationsService.create({
                 name,
-                commission_percentege
+                commission_percentege: commission_percentege | 0
             });
 
             return res.status(201).json(occupation);

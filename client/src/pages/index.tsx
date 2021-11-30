@@ -22,6 +22,7 @@ const Home = () => {
     const handleManager = () => {
       setIsManager(!isManager);
     }
+    
     const handleCPFInput = (keyEvent: KeyboardEvent) => {
         if (keyEvent.key != 'Backspace' && keyEvent.key != 'Tab' && keyEvent.key != 'Enter') {
             if (!/\d/.test(keyEvent.key)) {

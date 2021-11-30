@@ -1,0 +1,144 @@
+.bg_modal {
+    width: calc(100% + 6.5rem);
+    min-height: 100vh;
+    position: absolute;
+    top: -2rem;
+    right: 0;
+    z-index: 99;
+    
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .content {
+        max-width: 25rem;
+        background: var(--bg-secondary);
+        padding: 1rem;
+        border-radius: 0.8rem;
+        display: flex;
+        flex-direction: column;
+        row-gap: 0.5rem;
+
+        .field {
+            span {
+                color: var(--subtitle);
+            }
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            row-gap: 0.5rem;
+
+            .radio {
+                display: flex;
+                align-items: center;
+                width: 100%;
+
+                input {
+                    opacity: 0;
+                }
+
+                label {
+                    position: relative;
+                    left: -0.8rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                span {
+                    position: relative;
+                    left: -0.6rem;
+                    transition: all 0.3s ease;
+                }
+
+                label::before {
+                        content: '';
+                        display: inline-block;
+                        position: relative;
+                        width: 12px;
+                        height: 12px;
+                        top: 5px;
+                        margin: 0 5px 0 0;
+
+                        border-radius: 12px;
+                        top: -2px;
+                        left: -1px;
+                        background: var(--bg-secondary);
+                        border: 2px solid var(--subtitle);
+                        transition: all 0.3s ease;
+               }
+
+                input:checked + label::after {
+                    content: '';
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 8px;
+
+                    position: absolute;
+                    top: 4px;
+                    left: 3px;
+                    display: block;
+                    background: var(--red);
+                }
+
+                input:checked + label::before {
+                    border-color: var(--red);
+                }
+
+                span {
+                    color: var(--subtitle);
+                    font-size: 0.875rem;
+                    font-weight: 500;
+                    pointer-events: none;
+                }
+
+                input:checked ~ span {
+                    color: var(--red);
+                }
+            }
+
+            .buttons {
+                display: flex;
+                column-gap: 0.6rem;
+                width: 100%;
+
+                .buttonStyle {
+                    font-size: 1rem;
+                    letter-spacing: 1px;                    
+                }
+                
+                input {
+                    color: var(--bg-secondary);
+                    background: var(--subtitle);
+                    border: none;
+                    padding: 0.5rem 2rem;
+                    border-radius: 0.4rem;
+                    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+                    transition: all 0.3s ease;
+                }
+
+                button {
+                    font-weight: 500;
+                    border: 0;
+                    background: transparent;
+                    transition: all 0.3s ease;
+                }
+
+                button:hover {
+                    color: var(--purple-500);
+                }
+            }
+
+            .buttons.active input {
+                cursor: pointer;
+                background: var(--red);
+            }
+
+            .buttons.active input:hover {
+                background: var(--red-hover);
+            }
+        }
+    }
+}

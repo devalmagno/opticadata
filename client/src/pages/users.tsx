@@ -2,10 +2,13 @@ import { parseCookies } from "nookies";
 import { GetServerSideProps } from "next";
 
 import Header from "../components/Header";
+import RemoveUserModal from "../components/RemoveUserModal";
+import WorkerForm from "../components/WorkerForm";
 
 import { useFetch } from "../hooks/useFetch";
 
 import styles from "../styles/users.module.scss";
+import { useState } from "react";
 
 type Manager = {
     id: string;
@@ -22,7 +25,7 @@ type Occupation = {
     name: string;
 };
 
-type Worker = {
+export type Worker = {
     id: string;
     name: string;
     email: string;
@@ -33,10 +36,19 @@ type Worker = {
 };
 
 const Users = () => {
+    const [showCreateWorkerModal, setShowCreateWorkerModal] = useState(false);
+    const [showRemoveUserModal, setShowRemoveUserModal] = useState(false);
+    const [currentWorker, setCurrentWorker] = useState<Worker>();
+
     const { data: managers } = useFetch<Manager[]>("/managers");
     const { data: workers } = useFetch<Worker[]>("/workers");
-
     if (!managers || !workers) return <h2>Loading...</h2>;
+
+
+    const handleRemoveUser = (worker: Worker) => {
+        setCurrentWorker(worker);
+        setShowRemoveUserModal(!showRemoveUserModal);
+    }
 
     return (
         <div className={styles.container}>
@@ -46,7 +58,11 @@ const Users = () => {
                     <h3>Funcionários</h3>
 
                     <div className={styles.button}>
-                        <button>Adicionar funcionário</button>
+                        <button
+                            onClick={() => {
+                                setShowCreateWorkerModal(!showCreateWorkerModal)
+                            }}
+                        >Adicionar funcionário</button>
                     </div>
 
                     <table>
@@ -76,7 +92,12 @@ const Users = () => {
                                     <td>{worker.sales}</td>
                                     <td>{worker.occupation?.name}</td>
                                     <td>
-                                        <div className={styles.box_close}>
+                                        <div 
+                                            className={styles.box_close}
+                                            onClick={() => {
+                                                handleRemoveUser(worker)
+                                            }}
+                                        >
                                             <div className={styles.close}></div>
                                             <div className={styles.close}></div>
                                         </div>
@@ -116,6 +137,22 @@ const Users = () => {
                     </table>
                 </section>
             </div>
+
+            {showRemoveUserModal ? 
+                <RemoveUserModal 
+                    showModal={showRemoveUserModal} 
+                    setShowModal={setShowRemoveUserModal}
+                    worker={currentWorker!}
+                /> :
+                ''
+            }
+
+            {showCreateWorkerModal ? 
+                <WorkerForm 
+                    showModal={showCreateWorkerModal}
+                    setShowModal={setShowCreateWorkerModal}
+                /> : undefined
+            }
         </div>
     );
 };

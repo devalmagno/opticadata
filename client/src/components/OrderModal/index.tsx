@@ -6,7 +6,7 @@ import PaymentModal from "../PaymentModal";
 
 import { OrderInfo } from "../../pages/orders";
 import { Installment } from "../../pages/orders";
-import RemoveModal from "../RemoveModal";
+import RemoveModal from "../RemoveOrderModal";
 
 type Props = {
     showModal: boolean;

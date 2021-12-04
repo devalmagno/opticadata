@@ -16,8 +16,6 @@ type Props = {
 const RemoverWorkerModal = ({ showModal, setShowModal, worker, index, workersArray }: Props) => {
     const [isButton, setIsButton] = useState(false);
 
-    if (showModal) document.body.style.overflow = 'hidden';
-
     const handleRemoveUser = async (e: FormEvent) => {
         e.preventDefault();
 

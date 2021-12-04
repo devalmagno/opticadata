@@ -8,6 +8,7 @@ import RemoveManagerModal from "../components/RemoveManagerModal";
 import WorkerForm from "../components/WorkerForm";
 import ManagerForm from "../components/ManagerForm";
 import EditOccupation from "../components/EditOccupation";
+import Loading from "../components/Loading";
 
 import { useFetch } from "../hooks/useFetch";
 
@@ -54,7 +55,7 @@ const Users = () => {
 
     const { data: managers } = useFetch<Manager[]>("/managers");
     const { data: workers } = useFetch<Worker[]>("/workers");
-    if (!managers || !workers) return <h2>Loading...</h2>;
+    if (!managers || !workers) return <Loading />
 
     if (!showRemoveWorkerModal) document.body.style.overflow = "unset";
     if (!showCreateWorkerModal) document.body.style.overflow = "unset";
@@ -75,7 +76,7 @@ const Users = () => {
     const handleEditOccupation = (worker: Worker) => {
         setCurrentWorker(worker);
         setShowEditOccupation(!showEditOccupation);
-    }
+    };
 
     return (
         <div className={styles.container}>
@@ -104,7 +105,9 @@ const Users = () => {
                                 <th>CPF</th>
                                 <th>Telefone</th>
                                 <th>Vendas</th>
-                                <th>Cargo <BiEdit color="#110425" /></th>
+                                <th>
+                                    Cargo <BiEdit color="#110425" />
+                                </th>
                                 <th>Remover</th>
                             </tr>
                         </thead>
@@ -113,7 +116,7 @@ const Users = () => {
                                 <tr key={worker.id}>
                                     <td>{worker.name}</td>
                                     <td>
-                                        {worker.email}
+                                        <span>{worker.email}</span>
                                         <div className={styles.tooltip}>
                                             <span>{worker.email}</span>
                                         </div>
@@ -123,24 +126,22 @@ const Users = () => {
                                     <td>{worker.sales}</td>
                                     <td
                                         onClick={() => {
-                                            handleEditOccupation(worker)
+                                            handleEditOccupation(worker);
                                         }}
                                     >
-                                        {worker.occupation?.name}
+                                        {worker.occupation.name != null
+                                            ? worker.occupation.name
+                                            : "Adicionar cargo"}
                                         <div className={styles.tooltip}>
                                             <span>Editar</span>
                                         </div>
                                     </td>
-                                    <td>
-                                        <div
-                                            className={styles.box_close}
-                                            onClick={() => {
-                                                handleRemoveWorker(
-                                                    worker,
-                                                    index
-                                                );
-                                            }}
-                                        >
+                                    <td
+                                        onClick={() => {
+                                            handleRemoveWorker(worker, index);
+                                        }}
+                                    >
+                                        <div className={styles.box_close}>
                                             <div className={styles.close}></div>
                                             <div className={styles.close}></div>
                                         </div>
@@ -183,16 +184,12 @@ const Users = () => {
                                     <td>{manager.email}</td>
                                     <td>{manager.cpf}</td>
                                     <td>{manager.phone}</td>
-                                    <td>
-                                        <div
-                                            className={styles.box_close}
-                                            onClick={() => {
-                                                handleRemoveManager(
-                                                    manager,
-                                                    index
-                                                );
-                                            }}
-                                        >
+                                    <td
+                                        onClick={() => {
+                                            handleRemoveManager(manager, index);
+                                        }}
+                                    >
+                                        <div className={styles.box_close}>
                                             <div className={styles.close}></div>
                                             <div className={styles.close}></div>
                                         </div>
@@ -245,7 +242,7 @@ const Users = () => {
             ) : undefined}
 
             {showEditOccupation ? (
-                <EditOccupation 
+                <EditOccupation
                     showModal={showEditOccupation}
                     setShowModal={setShowEditOccupation}
                     worker={currentWorker!}

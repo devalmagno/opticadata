@@ -35,10 +35,6 @@ const ManagerForm = ({ showModal, setShowModal, managers }: Props) => {
 
     const cpfRef = useRef<HTMLInputElement>(null);
 
-    if (showModal) {
-        document.body.style.overflow = 'hidden';
-    };
-
     const handleCPFInput = (keyEvent: KeyboardEvent) => {
         if (
             keyEvent.key != "Backspace" &&
@@ -182,6 +178,7 @@ const ManagerForm = ({ showModal, setShowModal, managers }: Props) => {
                                 <input
                                     type="password"
                                     placeholder="Senha"
+                                    className={styles.password}
                                     id="password"
                                     onChange={(e) => {
                                         setPassword(e.target.value);
@@ -192,6 +189,7 @@ const ManagerForm = ({ showModal, setShowModal, managers }: Props) => {
                             <div className={styles.inputBox}>
                                 <input
                                     type="password"
+                                    className={styles.password}
                                     placeholder="Confirmar senha"
                                     id="confirmPass"
                                     onChange={(e) => {

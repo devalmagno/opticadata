@@ -20,8 +20,6 @@ const OrderModal = ({ showModal, setShowModal, currentOrder, ordersInfo }: Props
     const [showRemoveModal, setShowRemoveModal] = useState(false);
     const [currentInstallment, setCurrentInstallment] = useState<Installment>();
     const [currentIndex, setCurrentIndex] = useState(0);
-
-    if (showModal) document.body.style.overflow = 'hidden';
     
     const handleInstallment = (ins: Installment, index: number) => {
         setCurrentInstallment(ins);
@@ -49,7 +47,7 @@ const OrderModal = ({ showModal, setShowModal, currentOrder, ordersInfo }: Props
 
                         <div className={styles.container}>
                             <div className={styles.infoTables}>
-                                <table>
+                                <table className={styles.products}>
                                     <thead>
                                         <tr>
                                             <th>Modelo</th>
@@ -88,12 +86,12 @@ const OrderModal = ({ showModal, setShowModal, currentOrder, ordersInfo }: Props
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {currentOrder.workers.map((worker) => (
+                                        {currentOrder.workers.map((worker) => worker.name ? (
                                             <tr key={worker.id}>
                                                 <td>{worker.name}</td>
                                                 <td>{worker.occupation}</td>
                                             </tr>
-                                        ))}
+                                        ) : undefined )}
                                     </tbody>
                                 </table>
                             </div>

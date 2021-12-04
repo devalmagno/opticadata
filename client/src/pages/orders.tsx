@@ -8,6 +8,7 @@ import { useFetch } from "../hooks/useFetch";
 
 import Header from "../components/Header";
 import OrderModal from "../components/OrderModal";
+import Loading from "../components/Loading";
 
 import styles from "../styles/orders.module.scss";
 
@@ -55,7 +56,7 @@ export default function Orders() {
     const [currentOrder, setCurrentOrder] = useState<OrderInfo>();
 
     const { data: orderInfo } = useFetch<OrderInfo[]>("/orders");
-    if (!orderInfo) return <h1>Loading...</h1>;
+    if (!orderInfo) return <Loading />;
 
     if (!showModal) document.body.style.overflow = 'unset';
 

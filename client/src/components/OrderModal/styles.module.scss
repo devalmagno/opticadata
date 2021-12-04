@@ -3,9 +3,10 @@
     position: fixed;
     top: 0;
     bottom: 0;
+    left: 0;
     right: 0;
     z-index: 99;
-    
+
     background-color: rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
@@ -21,7 +22,7 @@
         text-align: center;
         padding: 20px;
         position: relative;
-    
+
         .header {
             width: 100%;
             display: flex;
@@ -60,201 +61,305 @@
             }
         }
 
-    .container {
-        display: flex;
-        justify-content: space-between;
-        
-        .infoTables {
-            width: 19rem;
+        .container {
+            display: flex;
+            justify-content: space-between;
 
-            table::before {
-                left: 0;
+            .infoTables {
+                width: 19rem;
+
+                table::before {
+                    left: 0;
+                }
+
+                .workers {
+                    width: 100%;
+                    margin-top: 2rem;
+
+                    td {
+                        text-align: left;
+                    }
+                }
+
+                .quantity {
+                    text-align: center;
+                }
             }
 
-            .workers {
+            .info {
+                max-width: 55%;
                 width: 100%;
-                margin-top: 2rem;
+                height: auto;
+                display: grid;
+                grid-template:
+                    "status payment"
+                    "type installmentPrice"
+                    "price price"
+                    "installments installments"
+                    "button button";
+                row-gap: 1rem;
 
-                td {
-                    text-align: left;
-                }
-            }
-
-            .quantity {
-                text-align: center;
-            }
-        }
-
-        .info {
-            max-width: 55%;
-            width: 100%;
-            height: auto;
-            display: grid;
-            grid-template: 
-                "status payment"
-                "type installmentPrice"
-                "price price"
-                "installments installments"
-                "button button"
-            ;
-            row-gap: 1rem;
-
-            .container {
-                height: 3rem;
-                color: var(--bg);
-                display: flex;
-                flex-direction: column;
-                text-align: left;
-
-                span {
-                    font-size: 0.9rem;
-                }
-
-                .paid {
-                    color: var(--green);
-                }
-
-                .pending {
-                    color: var(--red);
-                }
-            }
-
-            :nth-child(1) {
-                grid-area: status;
-            }
-
-            :nth-child(2) {
-                grid-area: payment;
-            }
-
-            :nth-child(3) {
-                grid-area: type;
-            }
-
-            :nth-child(4) {
-                grid-area: installmentPrice;
-            }
-
-            :nth-child(5) {
-                flex-direction: row;
-                grid-area: price;
-                justify-self: start;
-
-                span {
-                    margin-left: 0.5rem;
-                    font-size: 1rem;
-                }
-            }
-
-            .installments {
-                height: 6.5rem;
-                margin-top: -1.5rem;
-                color: var(--bg);
-                grid-area: installments;
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                justify-content: space-between;
-
-                .boxContainer {
+                .container {
+                    height: 3rem;
+                    color: var(--bg);
                     display: flex;
-                    column-gap: 1rem;
+                    flex-direction: column;
+                    text-align: left;
 
-                    .box {
-                        position: relative;
-                        width: 2.5rem;
-                        height: 2.5rem;
-                        border-radius: 0.5rem;
+                    span {
+                        font-size: 0.9rem;
+                    }
+
+                    .paid {
+                        color: var(--green);
+                    }
+
+                    .pending {
+                        color: var(--red);
+                    }
+                }
+
+                :nth-child(1) {
+                    grid-area: status;
+                }
+
+                :nth-child(2) {
+                    grid-area: payment;
+                }
+
+                :nth-child(3) {
+                    grid-area: type;
+                }
+
+                :nth-child(4) {
+                    grid-area: installmentPrice;
+                }
+
+                :nth-child(5) {
+                    flex-direction: row;
+                    grid-area: price;
+                    justify-self: start;
+
+                    span {
+                        margin-left: 0.5rem;
+                        font-size: 1rem;
+                    }
+                }
+
+                .installments {
+                    height: 6.5rem;
+                    margin-top: -1.5rem;
+                    color: var(--bg);
+                    grid-area: installments;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    justify-content: space-between;
+
+                    .boxContainer {
+                        display: flex;
+                        column-gap: 1rem;
+
+                        .box {
+                            position: relative;
+                            width: 2.5rem;
+                            height: 2.5rem;
+                            border-radius: 0.5rem;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            cursor: pointer;
+
+                            strong {
+                                font-size: 1.25rem;
+                            }
+
+                            .tooltip {
+                                position: absolute;
+                                top: -1.2rem;
+                                left: 1.25rem;
+                                background: var(--bg-secondary);
+                                padding: 0.4rem 0.8rem;
+                                border-radius: 0.8rem;
+                                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+                                font-size: 0.9rem;
+                                font-weight: 500;
+                                opacity: 0;
+                                transition: all 0.3s ease;
+                                z-index: 99;
+                            }
+                        }
+
+                        .box:hover .tooltip {
+                            opacity: 100;
+                        }
+
+                        .box.insPaid {
+                            border: 0.1125rem solid var(--green);
+
+                            strong {
+                                color: var(--green);
+                            }
+                        }
+
+                        .box.insPending {
+                            border: 0.1125rem solid var(--red);
+
+                            strong {
+                                color: var(--red);
+                            }
+                        }
+                    }
+
+                    span {
+                        font-size: 0.8rem;
+                        color: var(--subtitle);
+                    }
+                }
+
+                .button {
+                    grid-area: button;
+                    display: flex;
+
+                    button {
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        cursor: pointer;
-    
-                        strong {
-                            font-size: 1.25rem;
-                        }
-    
-                        .tooltip {
+
+                        position: relative;
+                        width: 70%;
+                        padding: 0.8rem 0;
+                        border: 0;
+                        border-radius: 0.4rem;
+                        background: var(--red);
+                        font-size: 1rem;
+                        font-weight: 500;
+                        color: var(--bg-secondary);
+                        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+                        letter-spacing: 1px;
+                        transition: all 0.3s ease;
+
+                        .icon {
                             position: absolute;
-                            top: -1.2rem;
-                            left: 1.25rem;
-                            background: var(--bg-secondary);
-                            padding: 0.4rem 0.8rem;
-                            border-radius: 0.8rem;
-                            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-                            font-size: 0.9rem;
-                            font-weight: 500;
-                            opacity: 0;
-                            transition: all 0.3s ease;
-                            z-index: 99;
-                        }
-                    }
-    
-                    .box:hover .tooltip {
-                        opacity: 100;
-                    }
-
-                    .box.insPaid {
-                        border: 0.1125rem solid var(--green);
-
-                        strong {
-                            color: var(--green);
+                            right: 1rem;
+                            font-size: 1.2rem;
                         }
                     }
 
-                    .box.insPending {
-                        border: 0.1125rem solid var(--red);
-
-                        strong {
-                            color: var(--red);
-                        }
+                    button:hover {
+                        background: var(--red-hover);
                     }
-                }
 
-                span {
-                    font-size: 0.8rem;
-                    color: var(--subtitle);
-                }
-            }
-
-            .button {
-                grid-area: button;
-                display: flex;
-
-                button {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-
-                    position: relative;
-                    width: 70%;
-                    padding: 0.8rem 0;
-                    border: 0;
-                    border-radius: 0.4rem;
-                    background: var(--red);
-                    font-size: 1rem;
-                    font-weight: 500;
-                    color: var(--bg-secondary);
-                    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-                    letter-spacing: 1px;
-                    transition: all 0.3s ease;
-
-                    .icon {
-                        position: absolute;
-                        right: 1rem;
-                        font-size: 1.2rem;
+                    button:focus {
+                        background: var(--red-focus);
                     }
-                }
-
-                button:hover {
-                    background: var(--red-hover);
-                }
-
-                button:focus {
-                    background: var(--red-focus);
                 }
             }
         }
     }
+}
 
-}}
+@media screen and (max-width: 850px) {
+    .bg_modal {
+        left: 0;
+
+        .modal_content {
+            max-width: calc(100% - 4rem);
+            padding: 1rem 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            column-gap: 1rem;
+            border-radius: 0;
+            position: fixed;
+            left: 4rem;
+
+            .container {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                row-gap: 1.5rem;
+
+                .infoTables {
+                    table {
+                        width: 100%;
+                    }
+
+                    thead {
+                        display: none;
+                    }
+
+                    tbody tr::after {
+                        display: none;
+                    }
+
+                    td {
+                        display: block;
+
+                        .icon {
+                            display: none;
+                        }
+                    }
+
+                    .products {
+                        td:first-child::before {
+                            content: "Modelo";
+                        }
+
+                        td:nth-child(2) {
+                            text-align: right;
+                        }
+    
+                        td:nth-child(2)::before {
+                            content: "Quantidade";
+                        }
+    
+                        td:nth-child(3)::before {
+                            content: "Preço";
+                        }
+                    }
+
+                    .workers {
+                        td:first-child::before {
+                            content: "Funcionário";
+                        }
+    
+                        td:nth-child(2)::before {
+                            content: "Cargo";
+                        }
+                    }
+
+                    td {
+                        text-align: right;
+                    }
+
+                    td::before {
+                        float: left;
+                        // margin-right: 3rem;
+                        font-weight: bold;
+                    }
+                }
+
+                .info {
+                    max-width: 100%;
+                    height: 100%;
+                    padding: 1rem;
+
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+
+                    .container {
+                        flex-direction: row;
+                    }
+
+                    .button {
+                        button {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

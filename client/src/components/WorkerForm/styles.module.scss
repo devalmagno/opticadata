@@ -3,6 +3,7 @@
     height: 100%;
     position: fixed;
     top: 0;
+    left: 0;
     bottom: 0;
     right: 0;
     z-index: 99;
@@ -180,3 +181,34 @@
             color: var(--subtitle);
         }
 }}
+
+@media screen and (max-width: 800px) {
+    .bg_modal {
+        left: 0;
+
+        .modal_content {
+            max-width: calc(100% - 4rem);
+            padding: 1rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            border-radius: 0;
+            position: fixed;
+            left: 4rem;
+
+            form {
+                grid-template-columns: 1fr;
+                height: 60%;
+
+                .inputBox button {
+                    position: relative;
+                }
+
+                .inputBox {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}

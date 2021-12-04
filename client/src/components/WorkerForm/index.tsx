@@ -41,8 +41,6 @@ const WorkerForm = ({ showModal, setShowModal, workers }: Props) => {
 
     const { data: occupations } = useFetch<Occupation[]>('/occupations');
     if (!occupations) return <div></div>;
-    
-    if (showModal) document.body.style.overflow = 'hidden';
 
     const handleCPFInput = (keyEvent: KeyboardEvent) => {
         if (

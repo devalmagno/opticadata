@@ -12,23 +12,17 @@ type Props = {
     showModal: boolean;
     setShowModal: Dispatch<SetStateAction<boolean>>;
     currentOrder: OrderInfo;
+    ordersInfo: OrderInfo[];
 };
 
-const OrderModal = ({ showModal, setShowModal, currentOrder }: Props) => {
-    const [paymentStatus, setPaymentStatus] = useState(false);
+const OrderModal = ({ showModal, setShowModal, currentOrder, ordersInfo }: Props) => {
     const [showPaymentModal, setShowPaymentModal] = useState(false);
     const [showRemoveModal, setShowRemoveModal] = useState(false);
     const [currentInstallment, setCurrentInstallment] = useState<Installment>();
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    // useEffect(() => {
-    //     const status = currentOrder.installment.map((ins) => ins.status).includes(false);
-
-    //     if (status.includes(false)) return;
-
-    //     setPaymentStatus(true);
-    // }, []);
-
+    if (showModal) document.body.style.overflow = 'hidden';
+    
     const handleInstallment = (ins: Installment, index: number) => {
         setCurrentInstallment(ins);
         setCurrentIndex(index);
@@ -214,7 +208,8 @@ const OrderModal = ({ showModal, setShowModal, currentOrder }: Props) => {
                             showModal={showRemoveModal}
                             setShowModal={setShowRemoveModal}
                             setShowOrderModal={setShowModal}
-                            order={currentOrder.order}
+                            currentOrder={currentOrder}
+                            ordersArray={ordersInfo}
                         />
                         :
                         ''

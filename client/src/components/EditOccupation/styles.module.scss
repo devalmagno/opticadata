@@ -14,59 +14,41 @@
     justify-content: center;
 
     .modal_content {
-        max-width: 40rem;
+        max-width: 20rem;
         width: 100%;
         background-color: var(--bg-secondary);
         border-radius: 1rem;
         text-align: center;
         padding: 20px;
         position: relative;
-    
+        display: flex;
+        flex-direction: column;
+        row-gap: 1rem;
+        
         .header {
             width: 100%;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 0.5rem;
+            justify-content: center;
+            padding: 0 0.5rem;
+            padding-top: 0.5rem;
+        }
 
-            .box_close {
-                width: 1.5rem;
+        .about {
+            .info {
                 height: 1.5rem;
-                position: relative;
-                cursor: pointer;
-
-                :first-child {
-                    transform: rotate(45deg);
-                }
-
-                :last-child {
-                    transform: rotate(-45deg);
-                }
-
-                .close {
-                    position: absolute;
-                    width: 100%;
-                    height: 2px;
-                    background: black;
-                    top: 50%;
-                    transition: background 0.3s;
-                }
-            }
-
-            .box_close:hover {
-                .close {
-                    background: var(--purple-100);
-                }
+                overflow: hidden;
+                padding: 0 .8rem;
+                text-align: left;
             }
         }
 
         form {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            justify-content: start;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             row-gap: 1rem;
-            padding: 1rem 1rem;
-            width: 100%;
 
             .inputBox {
                 width: 90%;
@@ -82,10 +64,6 @@
 
                     font-size: 0.975rem;
                     color: var(--subtitle);
-                }
-
-                input {
-                    padding-right: 1.8rem;
                 }
 
                 .bottom {
@@ -105,9 +83,6 @@
                     border: none;
                     background: transparent;
                     height: 100%;
-                    position: absolute;
-                    left: 0;
-
                     font-size: 0.975rem;
                     font-weight: 500;
                     letter-spacing: 1px;
@@ -122,7 +97,7 @@
 
                 button::before {
                     content: '';
-                    width: 100%;
+                    width: 75%;
                     height: 1px;
                     background: var(--purple-100);
                     position: absolute;
@@ -150,33 +125,23 @@
                     background: var(--green-hover);
                 }
 
-                input:focus ~ .bottom,
-                input:valid ~ .bottom {
-                    background: var(--green);
-                    height: 1.5px;
+                .cancel {
+                    width: 100%;
+                    padding: 0.5rem 0;
+                    letter-spacing: 1px;
+                    border-radius: 0.4rem;
+                    box-shadow: 0 5px 10px rgba(20, 18, 18, 0.2);
+                    transition: all 0.3s ease;
                 }
 
-                label {
-                    position: absolute;
-                    right: 0.5rem;
-                    bottom: 0.1rem;
-                    transition: all .3s ease;
-                    opacity: 0;
-
-                    .icon {
-                        color: var(--green);
-                    }
+                .cancel::before {
+                    width: 0;
                 }
 
-                input:valid ~ label {
-                    opacity: 100;
+                .cancel:hover {
+                    background: var(--red);
+                    color: var(--bg-secondary);
                 }
             }
-        }
-
-        span {
-            float: left;
-            font-size: 0.9rem;
-            color: var(--subtitle);
         }
 }}

@@ -55,8 +55,9 @@ export default function Orders() {
     const [currentOrder, setCurrentOrder] = useState<OrderInfo>();
 
     const { data: orderInfo } = useFetch<OrderInfo[]>("/orders");
-
     if (!orderInfo) return <h1>Loading...</h1>;
+
+    if (!showModal) document.body.style.overflow = 'unset';
 
     orderInfo.map((info) => {
         info.fullPrice = info.installment[0].price * info.installment.length;
@@ -124,6 +125,7 @@ export default function Orders() {
                 showModal={showModal} 
                 setShowModal={setShowModal}
                 currentOrder={currentOrder!} 
+                ordersInfo={orderInfo}
             /> : ''}
         </div>
     );

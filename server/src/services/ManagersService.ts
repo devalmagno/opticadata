@@ -21,11 +21,15 @@ class ManagersService {
     }
 
     async create({ name, email, phone, cpf, password }: IManagersCreate) {
-        const managerAlreadyExists = await this.ManagersRepository.findOne({
+        const managerCPFAlreadyExists = await this.ManagersRepository.findOne({
             cpf
         });
 
-        if (managerAlreadyExists) {
+        const managerEmailAlreadyExists = await this.ManagersRepository.findOne({
+            email
+        });
+
+        if (managerCPFAlreadyExists || managerEmailAlreadyExists) {
             throw new Error("Manager already exists!");
         }
 
@@ -87,6 +91,18 @@ class ManagersService {
         const updatedManager = await this.ManagersRepository.save(manager);
 
         return updatedManager;
+    }
+
+    async remove(id: string) {
+        const manager = await this.ManagersRepository.findOne({ id });
+
+        if (!manager) {
+            throw new Error ("Worker does not exists!!");
+        }
+
+        await this.ManagersRepository.remove(manager);
+
+        return manager;
     }
 
     async login(cpf: string, password: string) {

@@ -1,16 +1,20 @@
 import { parseCookies } from "nookies";
 import { GetServerSideProps } from "next";
+import { BiEdit } from "react-icons/bi";
 
 import Header from "../components/Header";
-import RemoveUserModal from "../components/RemoveUserModal";
+import RemoveWorkerModal from "../components/RemoveWorkerModal";
+import RemoveManagerModal from "../components/RemoveManagerModal";
 import WorkerForm from "../components/WorkerForm";
+import ManagerForm from "../components/ManagerForm";
+import EditOccupation from "../components/EditOccupation";
 
 import { useFetch } from "../hooks/useFetch";
 
 import styles from "../styles/users.module.scss";
 import { useState } from "react";
 
-type Manager = {
+export type Manager = {
     id: string;
     name: string;
     email: string;
@@ -36,18 +40,41 @@ export type Worker = {
 };
 
 const Users = () => {
+    const [showCreateManagerModal, setShowCreateManagerModal] = useState(false);
+    const [showRemoveManagerModal, setShowRemoveManagerModal] = useState(false);
+    const [currentManager, setCurrentManager] = useState<Manager>();
+
     const [showCreateWorkerModal, setShowCreateWorkerModal] = useState(false);
-    const [showRemoveUserModal, setShowRemoveUserModal] = useState(false);
+    const [showRemoveWorkerModal, setShowRemoveWorkerModal] = useState(false);
     const [currentWorker, setCurrentWorker] = useState<Worker>();
+
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const [showEditOccupation, setShowEditOccupation] = useState(false);
 
     const { data: managers } = useFetch<Manager[]>("/managers");
     const { data: workers } = useFetch<Worker[]>("/workers");
     if (!managers || !workers) return <h2>Loading...</h2>;
 
+    if (!showRemoveWorkerModal) document.body.style.overflow = "unset";
+    if (!showCreateWorkerModal) document.body.style.overflow = "unset";
+    if (!showCreateManagerModal) document.body.style.overflow = "unset";
 
-    const handleRemoveUser = (worker: Worker) => {
+    const handleRemoveWorker = (worker: Worker, index: number) => {
         setCurrentWorker(worker);
-        setShowRemoveUserModal(!showRemoveUserModal);
+        setCurrentIndex(index);
+        setShowRemoveWorkerModal(!showRemoveWorkerModal);
+    };
+
+    const handleRemoveManager = (manager: Manager, index: number) => {
+        setCurrentManager(manager);
+        setCurrentIndex(index);
+        setShowRemoveManagerModal(!showRemoveManagerModal);
+    };
+
+    const handleEditOccupation = (worker: Worker) => {
+        setCurrentWorker(worker);
+        setShowEditOccupation(!showEditOccupation);
     }
 
     return (
@@ -60,9 +87,13 @@ const Users = () => {
                     <div className={styles.button}>
                         <button
                             onClick={() => {
-                                setShowCreateWorkerModal(!showCreateWorkerModal)
+                                setShowCreateWorkerModal(
+                                    !showCreateWorkerModal
+                                );
                             }}
-                        >Adicionar funcionário</button>
+                        >
+                            Adicionar funcionário
+                        </button>
                     </div>
 
                     <table>
@@ -73,12 +104,12 @@ const Users = () => {
                                 <th>CPF</th>
                                 <th>Telefone</th>
                                 <th>Vendas</th>
-                                <th>Cargo</th>
+                                <th>Cargo <BiEdit color="#110425" /></th>
                                 <th>Remover</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {workers.map((worker) => (
+                            {workers.map((worker, index) => (
                                 <tr key={worker.id}>
                                     <td>{worker.name}</td>
                                     <td>
@@ -90,12 +121,24 @@ const Users = () => {
                                     <td>{worker.cpf}</td>
                                     <td>{worker.phone}</td>
                                     <td>{worker.sales}</td>
-                                    <td>{worker.occupation?.name}</td>
+                                    <td
+                                        onClick={() => {
+                                            handleEditOccupation(worker)
+                                        }}
+                                    >
+                                        {worker.occupation?.name}
+                                        <div className={styles.tooltip}>
+                                            <span>Editar</span>
+                                        </div>
+                                    </td>
                                     <td>
-                                        <div 
+                                        <div
                                             className={styles.box_close}
                                             onClick={() => {
-                                                handleRemoveUser(worker)
+                                                handleRemoveWorker(
+                                                    worker,
+                                                    index
+                                                );
                                             }}
                                         >
                                             <div className={styles.close}></div>
@@ -112,7 +155,15 @@ const Users = () => {
                     <h3>Gerentes</h3>
 
                     <div className={styles.button}>
-                        <button>Adicionar gerente</button>
+                        <button
+                            onClick={() => {
+                                setShowCreateManagerModal(
+                                    !showCreateManagerModal
+                                );
+                            }}
+                        >
+                            Adicionar gerente
+                        </button>
                     </div>
 
                     <table>
@@ -122,15 +173,30 @@ const Users = () => {
                                 <th>Email</th>
                                 <th>CPF</th>
                                 <th>Telefone</th>
+                                <th>Remover</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {managers.map((manager) => (
+                            {managers.map((manager, index) => (
                                 <tr key={manager.id}>
                                     <td>{manager.name}</td>
                                     <td>{manager.email}</td>
                                     <td>{manager.cpf}</td>
                                     <td>{manager.phone}</td>
+                                    <td>
+                                        <div
+                                            className={styles.box_close}
+                                            onClick={() => {
+                                                handleRemoveManager(
+                                                    manager,
+                                                    index
+                                                );
+                                            }}
+                                        >
+                                            <div className={styles.close}></div>
+                                            <div className={styles.close}></div>
+                                        </div>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -138,21 +204,53 @@ const Users = () => {
                 </section>
             </div>
 
-            {showRemoveUserModal ? 
-                <RemoveUserModal 
-                    showModal={showRemoveUserModal} 
-                    setShowModal={setShowRemoveUserModal}
+            {showRemoveWorkerModal ? (
+                <RemoveWorkerModal
+                    showModal={showRemoveWorkerModal}
+                    setShowModal={setShowRemoveWorkerModal}
                     worker={currentWorker!}
-                /> :
-                ''
-            }
+                    index={currentIndex}
+                    workersArray={workers}
+                />
+            ) : (
+                ""
+            )}
 
-            {showCreateWorkerModal ? 
-                <WorkerForm 
+            {showRemoveManagerModal ? (
+                <RemoveManagerModal
+                    showModal={showRemoveManagerModal}
+                    setShowModal={setShowRemoveManagerModal}
+                    manager={currentManager!}
+                    index={currentIndex}
+                    managersArray={managers}
+                />
+            ) : (
+                ""
+            )}
+
+            {showCreateWorkerModal ? (
+                <WorkerForm
                     showModal={showCreateWorkerModal}
                     setShowModal={setShowCreateWorkerModal}
-                /> : undefined
-            }
+                    workers={workers}
+                />
+            ) : undefined}
+
+            {showCreateManagerModal ? (
+                <ManagerForm
+                    showModal={showCreateManagerModal}
+                    setShowModal={setShowCreateManagerModal}
+                    managers={managers}
+                />
+            ) : undefined}
+
+            {showEditOccupation ? (
+                <EditOccupation 
+                    showModal={showEditOccupation}
+                    setShowModal={setShowEditOccupation}
+                    worker={currentWorker!}
+                />
+            ) : undefined}
         </div>
     );
 };

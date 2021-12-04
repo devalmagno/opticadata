@@ -1,6 +1,6 @@
 import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 
-import { OrderInfo } from "../../pages/orders";
+import { Worker } from "../../pages/users";
 import { api } from "../../services/api";
 
 import styles from "./styles.module.scss";
@@ -8,32 +8,27 @@ import styles from "./styles.module.scss";
 type Props = {
     showModal: boolean;
     setShowModal: Dispatch<SetStateAction<boolean>>;
-    setShowOrderModal: Dispatch<SetStateAction<boolean>>;
-    currentOrder: OrderInfo;
-    ordersArray: OrderInfo[];
+    worker: Worker;
+    index: number;
+    workersArray: Worker[];
 };
 
-const RemoveModal = ({
-    showModal,
-    setShowModal,
-    setShowOrderModal,
-    currentOrder,
-    ordersArray
-}: Props) => {
+const RemoverWorkerModal = ({ showModal, setShowModal, worker, index, workersArray }: Props) => {
     const [isButton, setIsButton] = useState(false);
 
-    const { order } = currentOrder;
-    
-    const handleRemoveOrder = async (e: FormEvent) => {
+    if (showModal) document.body.style.overflow = 'hidden';
+
+    const handleRemoveUser = async (e: FormEvent) => {
         e.preventDefault();
-        
-        const index = ordersArray.indexOf(currentOrder);
-        
-        api.delete(`/orders/${order.id}`).then(() => {
-            ordersArray.splice(index, 1);
-            setShowModal(!showModal);
-            setShowOrderModal(false);
-        }).catch(err => { console.log(err) });
+
+        try {
+            api.delete(`/workers/${worker.id}`).then(() => {
+                workersArray.splice(index, 1);
+                setShowModal(!showModal);
+            });
+        } catch (err) {
+            alert("Não foi possível remover este funcionário.");
+        }
     };
 
     return (
@@ -41,14 +36,14 @@ const RemoveModal = ({
             {showModal && (
                 <div className={styles.bg_modal}>
                     <div className={styles.content}>
-                        <h3>Remover registro de venda</h3>
+                        <h3>Remover funcionário</h3>
                         <div className={styles.field}>
                             <span>
-                                Tem certeza que deseja remover o registro desta
-                                venda?
+                                Tem certeza que deseja remover{" "}
+                                <strong>{worker.name}</strong> do sistema?
                             </span>
                         </div>
-                        <form onSubmit={handleRemoveOrder}>
+                        <form onSubmit={handleRemoveUser}>
                             <div className={styles.radio}>
                                 <input
                                     type="checkbox"
@@ -95,4 +90,4 @@ const RemoveModal = ({
     );
 };
 
-export default RemoveModal;
+export default RemoverWorkerModal;

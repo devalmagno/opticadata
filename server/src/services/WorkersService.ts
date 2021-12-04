@@ -27,12 +27,15 @@ class WorkersService {
     }
 
     async create({ occupation_id, name, email, phone, cpf }: IWorkersCreate) {
-        const workerAlreadyExists = await this.WorkersRepository.findOne({
-            cpf,
+        const workerCPFAlreadyExists = await this.WorkersRepository.findOne({
+            cpf
+        });
+
+        const workerEmailAlreadyExists = await this.WorkersRepository.findOne({
             email
         });
 
-        if (workerAlreadyExists) {
+        if (workerCPFAlreadyExists || workerEmailAlreadyExists) {
             throw new Error("Worker already exists!!");
         }
 
@@ -128,6 +131,8 @@ class WorkersService {
         if (!worker) {
             throw new Error ("Worker does not exists!!");
         }
+
+        console.log(occupation_id);
 
         this.WorkersRepository.merge(worker, { occupation_id });
 

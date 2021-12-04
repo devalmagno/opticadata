@@ -74,6 +74,23 @@ class ManagersController {
         }
     }
 
+    async remove(req: Request, res: Response) {
+        const { id } = req.params;
+
+        const managersService = new ManagersService();
+
+        try {
+            const manager = await managersService.remove(id);
+
+            return res.status(200).json({
+                message: "Manager has been deleted sucessfully",
+                manager
+            });
+        } catch(err) {
+            return res.status(400).json({ err: err.message });
+        }     
+    }
+
     async login(req: Request, res: Response) {
         const { cpf, password } = req.body;
         

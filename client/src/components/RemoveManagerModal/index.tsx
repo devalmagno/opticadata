@@ -1,7 +1,6 @@
-import Router from "next/router";
 import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 
-import { Worker } from "../../pages/users";
+import { Manager } from "../../pages/users";
 import { api } from "../../services/api";
 
 import styles from "./styles.module.scss";
@@ -9,24 +8,26 @@ import styles from "./styles.module.scss";
 type Props = {
     showModal: boolean;
     setShowModal: Dispatch<SetStateAction<boolean>>;
-    worker: Worker;
+    manager: Manager;
+    index: number;
+    managersArray: Manager[];
 };
 
-const RemoveUserModal = ({ showModal, setShowModal, worker }: Props) => {
+const RemoverWorkerModal = ({ showModal, setShowModal, manager, index, managersArray }: Props) => {
     const [isButton, setIsButton] = useState(false);
+
+    if (showModal) document.body.style.overflow = 'hidden';
 
     const handleRemoveUser = async (e: FormEvent) => {
         e.preventDefault();
 
         try {
-            api.delete(`/workers/${worker.id}`).then(() => {
+            api.delete(`/managers/${manager.id}`).then(() => {
+                managersArray.splice(index, 1);
                 setShowModal(!showModal);
-                Router.push('/').then(() => {
-                    Router.push('/users');
-                });
             });
         } catch (err) {
-            alert("Não foi possível.");
+            alert("Não foi possível deletar este gerente.");
         }
     };
 
@@ -35,11 +36,11 @@ const RemoveUserModal = ({ showModal, setShowModal, worker }: Props) => {
             {showModal && (
                 <div className={styles.bg_modal}>
                     <div className={styles.content}>
-                        <h3>Remover registro de venda</h3>
+                        <h3>Remover gerente</h3>
                         <div className={styles.field}>
                             <span>
                                 Tem certeza que deseja remover{" "}
-                                <strong>{worker.name}</strong> do sistema?
+                                <strong>{manager.name}</strong> do sistema?
                             </span>
                         </div>
                         <form onSubmit={handleRemoveUser}>
@@ -89,4 +90,4 @@ const RemoveUserModal = ({ showModal, setShowModal, worker }: Props) => {
     );
 };
 
-export default RemoveUserModal;
+export default RemoverWorkerModal;

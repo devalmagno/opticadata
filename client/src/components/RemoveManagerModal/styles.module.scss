@@ -1,12 +1,13 @@
 .bg_modal {
     width: calc(100% + 6.5rem);
-    min-height: 100vh;
-    position: absolute;
-    top: -2rem;
+    position: fixed;
+    top: 0;
+    bottom: 0;
     right: 0;
     z-index: 99;
     
     background-color: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 10px rgba(20, 18, 18, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;

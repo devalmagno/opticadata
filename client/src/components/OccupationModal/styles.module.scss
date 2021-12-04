@@ -1,8 +1,9 @@
 .bg_modal {
     width: calc(100% + 6.5rem);
     min-height: 100vh;
-    position: absolute;
-    top: 0rem;
+    position: fixed;
+    top: 0;
+    bottom: 0;
     right: 0;
     z-index: 99;
     

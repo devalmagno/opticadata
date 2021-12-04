@@ -8,20 +8,16 @@ import {
 } from "react";
 import { BiCheckCircle } from "react-icons/bi";
 
-
-import { useFetch } from "../../hooks/useFetch";
 import { api } from "../../services/api";
 
-import OccupationModal from "../../components/OccupationModal";
-
-import { Worker } from "../../pages/users";
+import { Manager } from "../../pages/users";
 
 import styles from "./styles.module.scss";
 
 type Props = {
     showModal: boolean;
     setShowModal: Dispatch<SetStateAction<boolean>>;
-    workers: Worker[];
+    managers: Manager[];
 };
 
 export type Occupation = {
@@ -29,20 +25,19 @@ export type Occupation = {
     name: string;
 };
 
-const WorkerForm = ({ showModal, setShowModal, workers }: Props) => {
+const ManagerForm = ({ showModal, setShowModal, managers }: Props) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [cpf, setCpf] = useState("");
     const [phone, setPhone] = useState("");
-    const [occupation, setOccupation] = useState("none");
-    const [showOccupationModal, setShowOccupationModal] = useState(false);
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     const cpfRef = useRef<HTMLInputElement>(null);
 
-    const { data: occupations } = useFetch<Occupation[]>('/occupations');
-    if (!occupations) return <div></div>;
-    
-    if (showModal) document.body.style.overflow = 'hidden';
+    if (showModal) {
+        document.body.style.overflow = 'hidden';
+    };
 
     const handleCPFInput = (keyEvent: KeyboardEvent) => {
         if (
@@ -70,15 +65,22 @@ const WorkerForm = ({ showModal, setShowModal, workers }: Props) => {
     const handleCreateWorker = (e: FormEvent) => {
         e.preventDefault();
 
-        api.post(`/workers/register`, {
+        if (password && password !== confirmPassword) {
+            alert("As senhas não correspondem.");
+            return;
+        } 
+
+        console.log(name, email, cpf, phone, password);
+
+        api.post(`/managers/register`, {
             name,
             email,
             cpf,
             phone,
-            occupation_id: occupation == "none" ? null : occupation,
+            password: "admin"
         })
             .then(res => {
-                workers.push(res.data.worker);
+                managers.push(res.data.manager);
                 setShowModal(!showModal);
             })
             .catch((err) => {
@@ -93,7 +95,7 @@ const WorkerForm = ({ showModal, setShowModal, workers }: Props) => {
                 <div className={styles.bg_modal}>
                     <div className={styles.modal_content}>
                         <div className={styles.header}>
-                            <h3>Adicionar funcionário</h3>
+                            <h3>Adicionar gerente</h3>
                             <div
                                 className={styles.box_close}
                                 onClick={() => {
@@ -177,30 +179,26 @@ const WorkerForm = ({ showModal, setShowModal, workers }: Props) => {
                                 <div className={styles.bottom}></div>
                             </div>
                             <div className={styles.inputBox}>
-                                <select
-                                    name="Cargo"
-                                    id="cargo"
+                                <input
+                                    type="password"
+                                    placeholder="Senha"
+                                    id="password"
                                     onChange={(e) => {
-                                        setOccupation(e.target.value);
+                                        setPassword(e.target.value);
                                     }}
-                                >
-                                    <option value="Cargo">Cargo</option>
-                                    {occupations.map((occ) => (
-                                        <option key={occ.id} value={occ.id}>
-                                            {occ.name}
-                                        </option>
-                                    ))}
-                                </select>
+                                />
                                 <div className={styles.bottom}></div>
                             </div>
                             <div className={styles.inputBox}>
-                                <button
-                                    onClick={(e: FormEvent) => {
-                                        e.preventDefault();
-
-                                        setShowOccupationModal(!showOccupationModal)
+                                <input
+                                    type="password"
+                                    placeholder="Confirmar senha"
+                                    id="confirmPass"
+                                    onChange={(e) => {
+                                        setConfirmPassword(e.target.value);
                                     }}
-                                >Adicionar novo cargo</button>
+                                />
+                                <div className={styles.bottom}></div>
                             </div>
                             <div className={styles.inputBox}>
                                 <input
@@ -210,21 +208,12 @@ const WorkerForm = ({ showModal, setShowModal, workers }: Props) => {
                                 />
                             </div>
                         </form>
-                        <span>*A senha padrão para funcionários é admin.</span>
+                        <span>*A senha padrão para gerentes é "admin".</span>
                     </div>
-
-                    {showOccupationModal ?
-                        <OccupationModal 
-                            showModal={showOccupationModal}
-                            setShowModal={setShowOccupationModal}
-                            occupations={occupations}
-                        /> : 
-                        undefined
-                    }
                 </div>
             ) : undefined}
         </>
     );
 };
 
-export default WorkerForm;
+export default ManagerForm;

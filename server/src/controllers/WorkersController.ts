@@ -60,6 +60,21 @@ class WorkersController {
         }
     }
 
+    async changeWorkerOccupation(req: Request, res: Response) {
+        const { id } = req.params;
+        const { occupation_id } = req.body;
+
+        const workersService = new WorkersService();
+
+        try {
+            const worker = await workersService.changeWorkerOccupation(id, occupation_id);
+        
+            res.status(201).json(worker);
+        } catch(err) {
+            return res.status(400).json({ err: err.message });
+        } 
+    }
+
     async updateWorker(req: Request, res: Response) {
         const { id } = req.params;
         const { name, email, phone } = req.body;

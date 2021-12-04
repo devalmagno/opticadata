@@ -159,7 +159,11 @@ class OrdersService {
                     const workerInfo = {
                         id: workers.filter(worker => worker.id == workerOrder.worker_id).map(worker => worker.id)[0],
                         name:  workers.filter(worker => worker.id == workerOrder.worker_id).map(worker => worker.name)[0],
-                        occupation: occupations.filter(occupation => occupation.id == workers.filter(worker => worker.id == workerOrder.worker_id)[0].occupation_id)[0]?.name,
+                        occupation: workers.filter(worker => worker.id == workerOrder.id).map(worker => {
+                            const occupation = occupations.filter(occ => occ.id == worker.occupation_id)[0].name;
+
+                            return occupation;
+                        }),
                     }
 
                     return workerInfo;

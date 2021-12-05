@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Router from "next/router";
-import { ReactNode, useContext, useState } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { destroyCookie } from "nookies";
 
 import { BiGlassesAlt, BiUser, BiLogOut } from "react-icons/bi";
@@ -18,7 +18,6 @@ type Props = {
 
 const Sidebar = () => {
     const { user } = useContext(AuthContext);
-
     const [sideBar, setSideBar] = useState(false);
 
     const handleLogOut = () => {
@@ -62,11 +61,10 @@ const Sidebar = () => {
                 </li>
                 <li>
                     <Link href="/users">
-
-                    <a href="#">
-                        <FaUser className={styles.icons} />
-                        <span className={styles.links_name}>Usuários</span>
-                    </a>
+                        <a href="#">
+                            <FaUser className={styles.icons} />
+                            <span className={styles.links_name}>Usuários</span>
+                        </a>
                     </Link>
 
                     <span className={styles.tooltip}>Usuários</span>
@@ -81,10 +79,10 @@ const Sidebar = () => {
                     <span className={styles.tooltip}>Vendas</span>
                 </li>
                 <li>
-                        <a>
-                            <AiOutlineDropbox className={styles.icons} />
-                            <span className={styles.links_name}>Estoque</span>
-                        </a>
+                    <a>
+                        <AiOutlineDropbox className={styles.icons} />
+                        <span className={styles.links_name}>Estoque</span>
+                    </a>
                     <span className={styles.tooltip}>Estoque</span>
                 </li>
                 <li>

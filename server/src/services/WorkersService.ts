@@ -132,8 +132,6 @@ class WorkersService {
             throw new Error ("Worker does not exists!!");
         }
 
-        console.log(occupation_id);
-
         this.WorkersRepository.merge(worker, { occupation_id });
 
         const updatedWorker = await this.WorkersRepository.save(worker);

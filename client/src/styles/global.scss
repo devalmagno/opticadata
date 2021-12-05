@@ -23,7 +23,7 @@
 
     --purple-300: #9F75FF;
     --purple-400: #9164FA; 
-    --purple-600: #8257E5;
+    --purple-600: #a19eaa;
     --purple-800: #6F48C9;
 
     --red: #D01137;
@@ -37,7 +37,17 @@
 body {
     position: relative;
     background: var(--bg-secondary);
-    overflow-x: hidden;
+    overflow-x: hidden !important;
+}
+
+body::-webkit-scrollbar {
+    width: 8px;
+    background: var(--bg);
+}
+
+body::-webkit-scrollbar-thumb {
+    background: var(--title);
+    border-radius: 8px 0 0 8px;
 }
 
 body, input, textarea, button {

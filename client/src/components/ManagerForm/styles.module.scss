@@ -157,8 +157,8 @@
                 }
 
                 input.password:valid ~ .bottom {
-                    background: var(--subtitle);
-                    height: 1px;
+                    background: #3337;
+                    height: 0.1px;
                 }
 
                 label {

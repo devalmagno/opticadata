@@ -3,6 +3,7 @@ import { getCustomRepository, Repository } from 'typeorm';
 
 import { Product } from '../entities/Product';
 import { ProductsRepository } from '../repositories/ProductsRepository';
+import { StockService } from './StockService';
 
 interface IProductCreate {
     id?: string;
@@ -41,7 +42,29 @@ class ProductsService {
     async getProducts() {
         const products = await this.productsRepository.find();
 
-        return products;
+        if (!products) throw new Error("There is no product data in the database");
+
+        const stockService = new StockService();
+
+        const stock = await stockService.getStocks();
+
+        const productList = products.map(product => {
+            let quantity = 0;
+
+            stock.filter(stock => stock.product_id == product.id).map(stock => {
+                if (stock.entry) quantity += stock.quantity;
+                else quantity -= stock.quantity;
+            })
+
+            return {
+                id: product.id,
+                name: product.name,
+                unit_price: product.unit_price,
+                quantity
+            }
+        })
+
+        return productList;
     }
 
     async getProductById(id: string) {

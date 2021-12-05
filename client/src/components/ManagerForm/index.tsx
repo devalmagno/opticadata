@@ -201,7 +201,7 @@ const ManagerForm = ({ showModal, setShowModal, managers }: Props) => {
                             <div className={styles.inputBox}>
                                 <input
                                     type="submit"
-                                    value="Cadastrar funcionário"
+                                    value="Cadastrar gerente"
                                     className={styles.submit}
                                 />
                             </div>

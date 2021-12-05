@@ -1,6 +1,7 @@
 import type { AppProps } from "next/app";
 
 import Sidebar from '../components/Sidebar';
+import OrderSidebar from "../components/OrderSidebar";
 
 import AuthProvider from "../contexts/AuthContext";
 
@@ -19,6 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                         <Sidebar />
                         <main>
                             <Component {...pageProps} />
+                            <OrderSidebar />                            
                         </main>
                     </div>
                 )

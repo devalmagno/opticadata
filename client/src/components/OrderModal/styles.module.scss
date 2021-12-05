@@ -138,7 +138,7 @@
                 :nth-child(5) {
                     flex-direction: row;
                     grid-area: price;
-                    justify-self: start;
+                    justify-self: flex-start;
 
                     span {
                         margin-left: 0.5rem;

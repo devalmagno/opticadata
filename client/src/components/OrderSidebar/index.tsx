@@ -9,6 +9,7 @@ import CustomerOrder from "../CustomerOrder";
 import { useFetch } from "../../hooks/useFetch";
 
 import styles from "./styles.module.scss";
+import PaymentOrder from "../PaymentOrder";
 
 export type Product = {
     id: string;
@@ -39,12 +40,18 @@ export type Customer = {
     phone: string;
 }
 
+export type Payment = {
+    type_of_payment: string;
+    payment_date: Date[];
+}
+
 const OrderSidebar = () => {
     const [showSidebar, setShowSidebar] = useState(false);
 
     const [orderProducts, setOrderProducts] = useState<Product[]>([]);
     const [orderWorkers, setOrderWorkers] = useState<Worker[]>([]);
     const [orderCustomers, setOrderCustomers] = useState<Customer[]>([]);
+    const [orderPayment, setOrderPayment] = useState<Payment[]>([]);
 
     const { data: products } = useFetch<Product[]>("/products");
     const { data: workers } = useFetch<Worker[]>("/workers");
@@ -87,6 +94,11 @@ const OrderSidebar = () => {
                             customers={customers}
                             orderCustomers={orderCustomers}
                             setOrderCustomers={setOrderCustomers}
+                        />
+
+                        <PaymentOrder 
+                            orderPayment={orderPayment}
+                            setOrderPayment={setOrderPayment}
                         />
                     </div>
                 </div>

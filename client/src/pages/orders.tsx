@@ -23,7 +23,7 @@ export type Order = {
 
 export type Installment = {
     id: string;
-    date: Date;
+    date: string;
     price: number;
     status: boolean;
 };

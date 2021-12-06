@@ -5,9 +5,9 @@ import { StockRepository } from "../repositories/StockRepository";
 
 interface IStockCreate {
     product_id: string;
-    provider_id: string;
+    provider_id?: string;
     quantity: number;
-    entry: boolean;
+    entry?: boolean;
 }
 
 class StockService {
@@ -21,7 +21,7 @@ class StockService {
         quantity, 
         product_id, 
         provider_id,
-        entry 
+        entry = false
     }: IStockCreate) {
         const stock = this.stockRepository.create({
             quantity,

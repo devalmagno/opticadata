@@ -15,17 +15,29 @@ type Props = {
     ordersInfo: OrderInfo[];
 };
 
-const OrderModal = ({ showModal, setShowModal, currentOrder, ordersInfo }: Props) => {
+const OrderModal = ({
+    showModal,
+    setShowModal,
+    currentOrder,
+    ordersInfo,
+}: Props) => {
     const [showPaymentModal, setShowPaymentModal] = useState(false);
     const [showRemoveModal, setShowRemoveModal] = useState(false);
     const [currentInstallment, setCurrentInstallment] = useState<Installment>();
     const [currentIndex, setCurrentIndex] = useState(0);
-    
+
     const handleInstallment = (ins: Installment, index: number) => {
         setCurrentInstallment(ins);
         setCurrentIndex(index);
         setShowPaymentModal(!showPaymentModal);
-    }
+    };
+
+    const sortDates = (date1: Installment, date2: Installment) => {
+        let newDate1 = date1.date.split('/').reverse().join('');
+        let newDate2 = date2.date.split('/').reverse().join('');
+
+        return newDate1 > newDate2 ? 1 : newDate1 < newDate2 ? -1 : 0;
+    };
 
     return (
         <>
@@ -86,29 +98,31 @@ const OrderModal = ({ showModal, setShowModal, currentOrder, ordersInfo }: Props
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {currentOrder.workers.map((worker) => worker.name ? (
-                                            <tr key={worker.id}>
-                                                <td>{worker.name}</td>
-                                                <td>{worker.occupation}</td>
-                                            </tr>
-                                        ) : undefined )}
+                                        {currentOrder.workers.map((worker) =>
+                                            worker.name ? (
+                                                <tr key={worker.id}>
+                                                    <td>{worker.name}</td>
+                                                    <td>{worker.occupation}</td>
+                                                </tr>
+                                            ) : undefined
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
                             <div className={styles.info}>
                                 <div className={styles.container}>
                                     <strong>Status do pagamento</strong>
-                                    {currentOrder.installment.map((ins) => ins.status).includes(false) ? (
+                                    {currentOrder.installment
+                                        .map((ins) => ins.status)
+                                        .includes(false) ? (
                                         <strong className={styles.pending}>
                                             PENDENTE
                                         </strong>
-                                    ) : 
-                                    (
+                                    ) : (
                                         <strong className={styles.paid}>
                                             PAGO
                                         </strong>
-                                    )
-                                    }
+                                    )}
                                 </div>
                                 <div className={styles.container}>
                                     <strong>Pagamento</strong>
@@ -146,13 +160,21 @@ const OrderModal = ({ showModal, setShowModal, currentOrder, ordersInfo }: Props
                                     <strong>Parcelas</strong>
 
                                     <div className={styles.boxContainer}>
-                                        {currentOrder.installment.slice(0).reverse().map(
-                                            (ins, index) => (
+                                        {currentOrder.installment
+                                            .sort(sortDates)
+                                            .map((ins, index) => (
                                                 <div
                                                     key={ins.id}
-                                                    className={ins.status ? `${styles.box} ${styles.insPaid}` : `${styles.box} ${styles.insPending}`}
+                                                    className={
+                                                        ins.status
+                                                            ? `${styles.box} ${styles.insPaid}`
+                                                            : `${styles.box} ${styles.insPending}`
+                                                    }
                                                     onClick={() => {
-                                                        handleInstallment(ins, index)
+                                                        handleInstallment(
+                                                            ins,
+                                                            index
+                                                        );
                                                     }}
                                                 >
                                                     <strong>{index + 1}</strong>
@@ -162,13 +184,10 @@ const OrderModal = ({ showModal, setShowModal, currentOrder, ordersInfo }: Props
                                                             styles.tooltip
                                                         }
                                                     >
-                                                        {
-                                                            ins.date
-                                                        }
+                                                        {ins.date}
                                                     </div>
                                                 </div>
-                                            )
-                                        )}
+                                            ))}
                                     </div>
 
                                     <span>
@@ -179,7 +198,9 @@ const OrderModal = ({ showModal, setShowModal, currentOrder, ordersInfo }: Props
                                 <div className={styles.button}>
                                     <button
                                         onClick={() => {
-                                            setShowRemoveModal(!showRemoveModal)
+                                            setShowRemoveModal(
+                                                !showRemoveModal
+                                            );
                                         }}
                                     >
                                         Remover venda
@@ -190,28 +211,28 @@ const OrderModal = ({ showModal, setShowModal, currentOrder, ordersInfo }: Props
                         </div>
                     </div>
 
-                    {showPaymentModal ? 
-                        <PaymentModal 
+                    {showPaymentModal ? (
+                        <PaymentModal
                             showModal={showPaymentModal}
                             setShowModal={setShowPaymentModal}
                             installment={currentInstallment!}
                             index={currentIndex}
                         />
-                        :
-                        ''
-                    }
+                    ) : (
+                        ""
+                    )}
 
-                    {showRemoveModal ?
-                        <RemoveModal 
+                    {showRemoveModal ? (
+                        <RemoveModal
                             showModal={showRemoveModal}
                             setShowModal={setShowRemoveModal}
                             setShowOrderModal={setShowModal}
                             currentOrder={currentOrder}
                             ordersArray={ordersInfo}
                         />
-                        :
-                        ''
-                    }
+                    ) : (
+                        ""
+                    )}
                 </div>
             )}
         </>

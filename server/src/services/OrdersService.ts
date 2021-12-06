@@ -8,48 +8,52 @@ import { OccupationsService } from "./OccupationsService";
 import { PaymentsService } from "./PaymentsService";
 import { ProductsOrderService } from "./ProductsOrderService";
 import { ProductsService } from "./ProductsService";
+import { StockService } from "./StockService";
 import { WorkersOrderService } from "./WorkersOrderService";
 import { WorkersService } from "./WorkersService";
 
 interface IOrdersCreate {
     id?: string;
     customer_id: string;
-    quantity: number;
+    quantity: number[];
 
     type_of_payment: string;
-    
+
     payment_date: Date[];
     price: number;
     status: boolean;
 
     products_id: string[];
-    
-    workers_id: string[]; 
+
+    workers_id: string[];
 }
 
 class OrdersService {
-    private ordersRepository : Repository<Order>;
+    private ordersRepository: Repository<Order>;
 
     constructor() {
         this.ordersRepository = getCustomRepository(OrdersRepository);
     }
 
-    async create({ 
-        customer_id, 
-        quantity, 
+    async create({
+        customer_id,
+        quantity,
         payment_date,
         products_id,
         type_of_payment,
         workers_id,
-        price
+        price,
     }: IOrdersCreate) {
         const paymentsService = new PaymentsService();
         const installmentsService = new InstallmentsService();
         const productsOrderService = new ProductsOrderService();
         const workersOrderService = new WorkersOrderService();
+        const stockService = new StockService();
 
         if (payment_date.length > 1 && !customer_id) {
-            throw new Error("To make a installment sale, the customer must be registered on the plataform.");
+            throw new Error(
+                "To make a installment sale, the customer must be registered on the plataform."
+            );
         }
 
         if (!products_id) {
@@ -81,27 +85,34 @@ class OrdersService {
             });
         });
 
-        products_id.forEach(async (product_id) => {
+        products_id.forEach(async (product_id, index) => {
             await productsOrderService.create({
                 order_id: order.id,
                 product_id,
-                quantity
-            })
+                quantity: quantity[index],
+            });
         });
+
+        products_id.forEach(async (product_id, index) => {
+            await stockService.create({
+                product_id,
+                quantity: quantity[index],
+            });
+        })
 
         workers_id.forEach(async (worker_id) => {
             await workersOrderService.create({
                 order_id: order.id,
-                worker_id
-            })
-        })
+                worker_id,
+            });
+        });
 
         return order;
     }
 
     async getOrders() {
         const orders = await this.ordersRepository.find();
-        
+
         if (!orders) throw new Error("There is no order in the database.");
 
         return orders;
@@ -130,45 +141,87 @@ class OrdersService {
         const workers = await workersService.getWorkers();
         const occupations = await occupationsService.getOccupations();
 
-        const fullOrder = orders.map(order => {
+        const fullOrder = orders.map((order) => {
             return {
                 order,
-                payment: payments.filter(payment => payment.id == order.payment_id).map(payment => payment.type_of_payment),
-                installment: installments.filter(installment => installment.payment_id == order.payment_id).map(ins => {
-                    const formatedInstallment = {
-                        id: ins.id,
-                        date: ins.payment_date.toLocaleDateString("pt-BR"),
-                        price: ins.price,
-                        status: ins.status
-                    }
+                payment: payments
+                    .filter((payment) => payment.id == order.payment_id)
+                    .map((payment) => payment.type_of_payment),
+                installment: installments
+                    .filter(
+                        (installment) =>
+                            installment.payment_id == order.payment_id
+                    )
+                    .map((ins) => {
+                        const formatedInstallment = {
+                            id: ins.id,
+                            date: ins.payment_date.toLocaleDateString("pt-BR"),
+                            price: ins.price,
+                            status: ins.status,
+                        };
 
-                    return formatedInstallment;
-                }),
-                customer: customers.filter(customer => customer.id == order.customer_id).map(customer => customer.name),
-                products: productsOrder.filter(product => product.order_id == order.id).map(productOrder => {
-                    const productInfo = {
-                        id: products.filter(product => product.id == productOrder.product_id).map(product => product.id)[0],
-                        quantity: productOrder.quantity,
-                        name: products.filter(product => product.id == productOrder.product_id).map(product => product.name)[0],
-                        price: products.filter(product => product.id == productOrder.product_id).map(product => product.unit_price)[0]
-                    }
+                        return formatedInstallment;
+                    }),
+                customer: customers
+                    .filter((customer) => customer.id == order.customer_id)
+                    .map((customer) => customer.name),
+                products: productsOrder
+                    .filter((product) => product.order_id == order.id)
+                    .map((productOrder) => {
+                        const productInfo = {
+                            id: products
+                                .filter(
+                                    (product) =>
+                                        product.id == productOrder.product_id
+                                )
+                                .map((product) => product.id)[0],
+                            quantity: productOrder.quantity,
+                            name: products
+                                .filter(
+                                    (product) =>
+                                        product.id == productOrder.product_id
+                                )
+                                .map((product) => product.name)[0],
+                            price: products
+                                .filter(
+                                    (product) =>
+                                        product.id == productOrder.product_id
+                                )
+                                .map((product) => product.unit_price)[0],
+                        };
 
-                    return productInfo;
-                }),
-                workers: workersOrder.filter(worker => worker.order_id == order.id).map(workerOrder => {
-                    const workerInfo = {
-                        id: workers.filter(worker => worker.id == workerOrder.worker_id).map(worker => worker.id)[0],
-                        name:  workers.filter(worker => worker.id == workerOrder.worker_id).map(worker => worker.name)[0],
-                        occupation: workers.filter(worker => worker.id == workerOrder.id).map(worker => {
-                            const occupation = occupations.filter(occ => occ.id == worker.occupation_id)[0].name;
+                        return productInfo;
+                    }),
+                workers: workersOrder
+                    .filter((worker) => worker.order_id == order.id)
+                    .map((workerOrder) => {
+                        const workerInfo = {
+                            id: workers
+                                .filter(
+                                    (worker) =>
+                                        worker.id == workerOrder.worker_id
+                                )
+                                .map((worker) => worker.id)[0],
+                            name: workers
+                                .filter(
+                                    (worker) =>
+                                        worker.id == workerOrder.worker_id
+                                )
+                                .map((worker) => worker.name)[0],
+                            occupation: workers
+                                .filter((worker) => worker.id == workerOrder.id)
+                                .map((worker) => {
+                                    const occupation = occupations.filter(
+                                        (occ) => occ.id == worker.occupation_id
+                                    )[0].name;
 
-                            return occupation;
-                        }),
-                    }
+                                    return occupation;
+                                }),
+                        };
 
-                    return workerInfo;
-                })
-            }
+                        return workerInfo;
+                    }),
+            };
         });
 
         return fullOrder;
@@ -176,7 +229,7 @@ class OrdersService {
 
     async getOrderById(id: string) {
         const order = await this.ordersRepository.findOne({
-            id
+            id,
         });
 
         if (!order) throw new Error("The order do not exists");
@@ -187,34 +240,51 @@ class OrdersService {
         const workersOrderService = new WorkersOrderService();
 
         const payment = await paymentsService.getPaymentById(order.payment_id);
-        const installments = await installmentsService.getInstallmentsByPayment(order.payment_id)
+        const installments = await installmentsService.getInstallmentsByPayment(
+            order.payment_id
+        );
 
-        const productsOrder = await productsOrderService.getProductOrderByOrderId(order.id);
-        const workersOrder = await workersOrderService.getWorkersOrderByOrderId(order.id);
+        const productsOrder =
+            await productsOrderService.getProductOrderByOrderId(order.id);
+        const workersOrder = await workersOrderService.getWorkersOrderByOrderId(
+            order.id
+        );
 
         const orderInfo = {
             order,
             productsOrder,
             payment,
             installments,
-            workersOrder
-        }
+            workersOrder,
+        };
 
         return orderInfo;
     }
 
     async removeOrder(id: string) {
         const order = await this.ordersRepository.findOne({
-            id
+            id,
         });
 
         if (!order) throw new Error("The order do not exists");
 
+        const productsOrderService = new ProductsOrderService();
+        const productsOrder = await productsOrderService.getProductOrderByOrderId(order.id);
+
         await this.ordersRepository.remove(order);
 
         const paymentsService = new PaymentsService();
+        const stockService = new StockService();
 
         await paymentsService.removePayment(order.payment_id);
+        
+        productsOrder.forEach(async prod => {
+            await stockService.create({
+                product_id: prod.product_id,
+                quantity: prod.quantity,
+                entry: true
+            });
+        });
 
         return order;
     }

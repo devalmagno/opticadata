@@ -50,7 +50,8 @@ const WorkerOrder = ({ orderWorkers, setOrderWorkers, workers }: Props) => {
     const handleOrderWorker = (worker: Worker) => {
         let workers = [...orderWorkers];
 
-        workers.push(worker);
+        if (!workers.find((w) => w.id == worker.id)) workers.push(worker);
+        else alert("Funcionário já adicionado ou quantidade insuficiente.");
 
         setOrderWorkers(workers);
         setSearchValue("");
@@ -131,11 +132,7 @@ const WorkerOrder = ({ orderWorkers, setOrderWorkers, workers }: Props) => {
                 </div>
             </div>
 
-            <div
-                className={
-                        styles.button
-                }
-            >
+            <div className={styles.button}>
                 <button
                     onClick={() => {
                         currentWorker != null

@@ -15,7 +15,7 @@ import { api } from "../../services/api";
 export type Product = {
     id: string;
     name: string;
-    unit_price: string;
+    unit_price: number;
     quantity: number;
 };
 
@@ -65,8 +65,28 @@ const OrderSidebar = () => {
 
     const handleCreateNewOrder = () => {
         const products_id = orderProducts.map(prod => prod.id);
+        const workers_id = orderWorkers.map(worker => worker.id);
+        const customer_id = orderCustomers[0] != null ? orderCustomers[0].id : null;
+        const payment_date = orderPayment.payment_date;
+        const quantity = orderProducts.map(prod => prod.quantity);
+        let price = 0;
+
+        orderProducts.forEach(prod => {
+            price += prod.unit_price * prod.quantity;
+        });
 
         api.post("/orders", {
+            products_id,
+            workers_id,
+            customer_id,
+            payment_date,
+            price,
+            quantity,
+            type_of_payment: orderPayment.type_of_payment
+        }).then(() => {
+            alert("Registro de ordem feito com sucesso");
+        }).catch(err => {
+            console.log(err.message);
         })
     }
 
@@ -123,7 +143,9 @@ const OrderSidebar = () => {
                             orderWorkers.length != 0 ? 
                             styles.button :
                             `${styles.button} ${styles.disabled}`
-                        }>
+                        }
+                            onClick={handleCreateNewOrder}
+                        >
                             <button>
                                 Confirmar venda
                             </button>

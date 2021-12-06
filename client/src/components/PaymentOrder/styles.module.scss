@@ -32,6 +32,12 @@
             font-size: 1rem;
         }
 
+        .warning {
+            color: var(--red);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
         .installment {
             span {
                 font-weight: 500;                        

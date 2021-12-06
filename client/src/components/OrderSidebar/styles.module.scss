@@ -15,14 +15,16 @@
 .sidebar {
     position: fixed;
     top: 0;
-    right: 0;
+    right: -27rem;
+    transform: translateX(-27rem);
+    transform-origin: right;
     height: 100%;
     background: var(--bg-secondary);
     box-shadow: 0 5px 10px rgba(20, 18, 18, 0.2);
     border-radius: 1rem 0 0 1rem;
     width: 27rem;
     padding: 2rem 1.5rem;
-    transition: all 0.3s ease;
+    // transition: all 0.3s;
     display: flex;
     flex-direction: column;
     row-gap: 1rem;
@@ -49,6 +51,39 @@
         display: flex;
         flex-direction: column;
         row-gap: 1rem;
+
+        .button {
+            width: 16rem;
+            margin-top: 1.5rem;
+        
+            button {
+                width: 100%;
+                padding: 0.5rem 0;
+                border: none;
+                border-radius: 0.4rem;
+                background: var(--green);
+                box-shadow: 0 5px 10px rgba(20, 18, 18, 0.2);
+        
+                font-size: 1rem;
+                color: var(--bg-secondary);
+                font-weight: 500;
+                letter-spacing: 1px;
+                transition: all 0.3s ease;
+            }
+        
+            button:hover {
+                background: var(--green-hover);
+            }
+        }
+        
+        .button.disabled {
+            button {
+                pointer-events: none;
+        
+                background: var(--subtitle);
+                opacity: .7;
+            }
+        }
     }
 }
 

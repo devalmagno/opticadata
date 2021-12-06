@@ -48,9 +48,7 @@ const WorkerOrder = ({ orderCustomers, setOrderCustomers, customers }: Props) =>
     };
 
     const handleOrderWorker = (worker: Customer) => {
-        let customers = [...orderCustomers];
-
-        customers.push(worker);
+        let customers = [worker];
 
         setOrderCustomers(customers);
         setSearchValue("");
@@ -100,7 +98,7 @@ const WorkerOrder = ({ orderCustomers, setOrderCustomers, customers }: Props) =>
                                 className={styles.radio}
                             />
                             <label htmlFor={`${worker.name}`}>
-                                {worker.name}
+                                {worker.name} {worker.cpf}
                             </label>
                         </div>
                     ))}

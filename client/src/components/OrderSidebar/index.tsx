@@ -10,6 +10,7 @@ import { useFetch } from "../../hooks/useFetch";
 
 import styles from "./styles.module.scss";
 import PaymentOrder from "../PaymentOrder";
+import { api } from "../../services/api";
 
 export type Product = {
     id: string;
@@ -27,9 +28,9 @@ export type Worker = {
     occupation: {
         id: string;
         name: string;
-    },
-    sales: number
-}
+    };
+    sales: number;
+};
 
 export type Customer = {
     id: string;
@@ -38,12 +39,12 @@ export type Customer = {
     name: string;
     email: string;
     phone: string;
-}
+};
 
 export type Payment = {
     type_of_payment: string;
     payment_date: Date[];
-}
+};
 
 const OrderSidebar = () => {
     const [showSidebar, setShowSidebar] = useState(false);
@@ -51,18 +52,34 @@ const OrderSidebar = () => {
     const [orderProducts, setOrderProducts] = useState<Product[]>([]);
     const [orderWorkers, setOrderWorkers] = useState<Worker[]>([]);
     const [orderCustomers, setOrderCustomers] = useState<Customer[]>([]);
-    const [orderPayment, setOrderPayment] = useState<Payment[]>([]);
+    const [orderPayment, setOrderPayment] = useState<Payment>({
+        type_of_payment: "Dinheiro",
+        payment_date: [new Date()],
+    });
 
     const { data: products } = useFetch<Product[]>("/products");
     const { data: workers } = useFetch<Worker[]>("/workers");
-    const { data: customers } = useFetch<Customer[]>('/customers');
+    const { data: customers } = useFetch<Customer[]>("/customers");
 
     if (!products || !workers || !customers) return <Loading />;
+
+    const handleCreateNewOrder = () => {
+        const products_id = orderProducts.map(prod => prod.id);
+
+        api.post("/orders", {
+        })
+    }
 
     return (
         <>
             {showSidebar ? (
-                <div className={styles.sidebar}>
+                <div
+                    className={
+                        showSidebar
+                            ? styles.sidebar
+                            : `${styles.sidebar} ${styles.disabled}`
+                    }
+                >
                     <header>
                         <h3>Registrar venda</h3>
 
@@ -77,29 +94,41 @@ const OrderSidebar = () => {
                     </header>
 
                     <div className={styles.container}>
-
-                        <ProductOrder 
+                        <ProductOrder
                             products={products}
                             orderProducts={orderProducts}
                             setOrderProducts={setOrderProducts}
                         />
-                        
-                        <WorkerOrder 
+
+                        <WorkerOrder
                             workers={workers}
                             orderWorkers={orderWorkers}
                             setOrderWorkers={setOrderWorkers}
                         />
 
-                        <CustomerOrder 
+                        <CustomerOrder
                             customers={customers}
                             orderCustomers={orderCustomers}
                             setOrderCustomers={setOrderCustomers}
                         />
 
-                        <PaymentOrder 
+                        <PaymentOrder
                             orderPayment={orderPayment}
                             setOrderPayment={setOrderPayment}
+                            customer={orderCustomers}
                         />
+
+                        <div className={
+                            orderProducts.length != 0 &&
+                            orderWorkers.length != 0 ? 
+                            styles.button :
+                            `${styles.button} ${styles.disabled}`
+                        }>
+                            <button>
+                                Confirmar venda
+                            </button>
+                        </div>
+
                     </div>
                 </div>
             ) : (

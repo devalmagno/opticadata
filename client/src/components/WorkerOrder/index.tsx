@@ -100,7 +100,7 @@ const WorkerOrder = ({ orderWorkers, setOrderWorkers, workers }: Props) => {
                                 className={styles.radio}
                             />
                             <label htmlFor={`${worker.name}`}>
-                                {worker.name}
+                                {worker.name} {worker.cpf}
                             </label>
                         </div>
                     ))}

@@ -7,13 +7,13 @@ class Provider {
     @PrimaryColumn()
     id: string;
 
-    @Column()
+    @Column({ length: 18 })
     cnpj: string;
 
-    @Column()
+    @Column({ length: 40 })
     name: string;
 
-    @Column()
+    @Column({ length: 14 })
     phone: string;
 
     @CreateDateColumn()

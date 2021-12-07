@@ -7,19 +7,19 @@ class Manager {
     @PrimaryColumn()
     id: string;
 
-    @Column()
+    @Column({length: 40})
     name: string;
 
-    @Column()
+    @Column({length: 100})
     email: string;
 
-    @Column()
+    @Column({length: 14})
     phone: string;
 
-    @Column()
+    @Column({length: 14})
     cpf: string;
 
-    @Column({ select: false })
+    @Column({ select: false, length: 40 })
     password: string;
 
     @CreateDateColumn()

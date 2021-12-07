@@ -16,7 +16,7 @@ class Product {
     @Column()
     productcategory_id: string;
 
-    @Column()
+    @Column({ length: 40 })
     name: string;
 
     @Column()

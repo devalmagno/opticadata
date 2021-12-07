@@ -116,7 +116,7 @@ const Users = () => {
                                 <tr key={worker.id}>
                                     <td>{worker.name}</td>
                                     <td>
-                                        <span>{worker.email}</span>
+                                        <div className={styles.email}><span>{worker.email}</span></div>
                                         <div className={styles.tooltip}>
                                             <span>{worker.email}</span>
                                         </div>

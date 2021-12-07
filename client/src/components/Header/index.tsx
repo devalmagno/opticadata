@@ -30,8 +30,6 @@ export default function Header({ title }: Props) {
             })
     }, []);
 
-    console.log();
-
     return (
         <div className={styles.container}>
             <h2>{title}</h2>

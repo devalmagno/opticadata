@@ -26,7 +26,7 @@ class WorkersService {
         this.WorkersRepository = getCustomRepository(WorkersRepository);
     }
 
-    async create({ occupation_id, name, email, phone, cpf }: IWorkersCreate) {
+    async create({ id ,occupation_id, name, email, phone, cpf }: IWorkersCreate) {
         const workerCPFAlreadyExists = await this.WorkersRepository.findOne({
             cpf
         });
@@ -44,6 +44,7 @@ class WorkersService {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const worker = this.WorkersRepository.create({
+            id,
             occupation_id,
             name,
             email,

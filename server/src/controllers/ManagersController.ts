@@ -6,12 +6,13 @@ import { ManagersService } from "../services/ManagersService";
 
 class ManagersController {
     async create(req: Request, res: Response) {
-        const { name, email, phone, cpf, password } = req.body;
+        const { id, name, email, phone, cpf, password } = req.body;
 
         const managersService = new ManagersService();
 
         try {
             const manager = await managersService.create({
+                id,
                 name,
                 email,
                 phone,

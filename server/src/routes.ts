@@ -32,9 +32,8 @@ routes.post("/managers/register", managersController.create);
 routes.post("/managers/login", managersController.login);
 routes.post("/managers/token", managersController.authenticateToken);
 routes.get("/managers/", managersController.getAllManagers);
-routes.get("/managers/:id", managersController.authorizationReq, managersController.getManagerById);
-routes.put("/managers/:id", managersController.authorizationReq, managersController.updateManager);
-routes.put("/managers/password/:id", managersController.authorizationReq, managersController.changePassword);
+routes.put("/managers/:id", managersController.updateManager);
+routes.put("/managers/password/:id", managersController.changePassword);
 routes.delete("/managers/:id", managersController.remove);
 
 // Routes for Occupations
@@ -47,7 +46,6 @@ routes.delete("/occupations/:id",  occupationsController.removeOccupation);
 routes.post("/workers/register", workersController.create);
 routes.post("/workers/login", workersController.login);
 routes.get("/workers/", workersController.getWorkers);
-routes.get("/workers/:id", /* workersController.authenticateToken, */ workersController.getWorkerById);
 routes.put("/workers/:id", workersController.updateWorker);
 routes.put("/workers/occupation/:id", workersController.changeWorkerOccupation);
 routes.put("/workers/password/:id", workersController.changePassword);

@@ -64,7 +64,7 @@ const ManagerForm = ({ showModal, setShowModal, managers }: Props) => {
         if (password && password !== confirmPassword) {
             alert("As senhas não correspondem.");
             return;
-        } 
+        }
 
         console.log(name, email, cpf, phone, password);
 
@@ -73,9 +73,9 @@ const ManagerForm = ({ showModal, setShowModal, managers }: Props) => {
             email,
             cpf,
             phone,
-            password: "admin"
+            password: "admin",
         })
-            .then(res => {
+            .then((res) => {
                 managers.push(res.data.manager);
                 setShowModal(!showModal);
             })
@@ -109,6 +109,7 @@ const ManagerForm = ({ showModal, setShowModal, managers }: Props) => {
                                     type="text"
                                     placeholder="Nome"
                                     id="name"
+                                    maxLength={40}
                                     onChange={(e) => {
                                         setName(e.target.value);
                                     }}
@@ -124,6 +125,7 @@ const ManagerForm = ({ showModal, setShowModal, managers }: Props) => {
                                     type="email"
                                     placeholder="Email"
                                     id="email"
+                                    maxLength={100}
                                     onChange={(e) => {
                                         setEmail(e.target.value);
                                     }}
@@ -180,6 +182,7 @@ const ManagerForm = ({ showModal, setShowModal, managers }: Props) => {
                                     placeholder="Senha"
                                     className={styles.password}
                                     id="password"
+                                    maxLength={40}
                                     onChange={(e) => {
                                         setPassword(e.target.value);
                                     }}
@@ -191,6 +194,7 @@ const ManagerForm = ({ showModal, setShowModal, managers }: Props) => {
                                     type="password"
                                     className={styles.password}
                                     placeholder="Confirmar senha"
+                                    maxLength={40}
                                     id="confirmPass"
                                     onChange={(e) => {
                                         setConfirmPassword(e.target.value);

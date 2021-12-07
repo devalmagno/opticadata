@@ -54,7 +54,7 @@ const OrderSidebar = () => {
     const [orderCustomers, setOrderCustomers] = useState<Customer[]>([]);
     const [orderPayment, setOrderPayment] = useState<Payment>({
         type_of_payment: "Dinheiro",
-        payment_date: [new Date()],
+        payment_date: [],
     });
 
     const { data: products } = useFetch<Product[]>("/products");
@@ -67,13 +67,14 @@ const OrderSidebar = () => {
         const products_id = orderProducts.map(prod => prod.id);
         const workers_id = orderWorkers.map(worker => worker.id);
         const customer_id = orderCustomers[0] != null ? orderCustomers[0].id : null;
-        const payment_date = orderPayment.payment_date;
+        const payment_date = formatedDate(orderPayment.payment_date);
         const quantity = orderProducts.map(prod => prod.quantity);
         let price = 0;
 
         orderProducts.forEach(prod => {
             price += prod.unit_price * prod.quantity;
         });
+
 
         api.post("/orders", {
             products_id,
@@ -88,6 +89,15 @@ const OrderSidebar = () => {
         }).catch(err => {
             console.log(err.message);
         })
+
+        setOrderProducts([]);
+        setOrderWorkers([]);
+        setOrderCustomers([]);
+        setOrderPayment({
+            type_of_payment: "Dinheiro",
+            payment_date: [],
+        });
+        setShowSidebar(!showSidebar);
     }
 
     return (
@@ -140,7 +150,8 @@ const OrderSidebar = () => {
 
                         <div className={
                             orderProducts.length != 0 &&
-                            orderWorkers.length != 0 ? 
+                            orderWorkers.length != 0 &&
+                            orderPayment.payment_date.length != 0 ?
                             styles.button :
                             `${styles.button} ${styles.disabled}`
                         }
@@ -170,5 +181,23 @@ const OrderSidebar = () => {
         </>
     );
 };
+
+const formatedDate = (dateList: Date[]) => {
+    const currentDate = dateList.map(date => {
+        return {
+            date: date.getDate(),
+            month: date.getMonth(),
+            year: date.getFullYear(),
+        }
+    })
+
+    const payment_date = currentDate.map(date => {
+        const formatedDate = new Date(date.year, date.month, date.date + 1).toISOString();
+
+        return formatedDate;
+    });
+    
+    return payment_date;
+}
 
 export default OrderSidebar;

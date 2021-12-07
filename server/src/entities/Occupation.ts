@@ -8,7 +8,7 @@ class Occupation {
     @PrimaryColumn()
     id: string;
 
-    @Column()
+    @Column({ length: 20 })
     name: string;
 
     @Column()

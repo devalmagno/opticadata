@@ -6,6 +6,7 @@ class OccupationsController {
 
     async create(req: Request, res: Response) {
         const {
+            id,
             name, 
             commission_percentege
         } = req.body;
@@ -14,6 +15,7 @@ class OccupationsController {
 
         try {
             const occupation = await occupationsService.create({
+                id,
                 name,
                 commission_percentege: commission_percentege | 0
             });

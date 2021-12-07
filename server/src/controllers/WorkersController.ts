@@ -7,6 +7,7 @@ import { WorkersService } from "../services/WorkersService";
 class WorkersController {
     async create(req: Request, res: Response) {
         const { 
+            id,
             occupation_id,
             name, 
             email, 
@@ -18,6 +19,7 @@ class WorkersController {
 
         try {
             const worker = await workersService.create({
+                id,
                 occupation_id,
                 name, 
                 email, 

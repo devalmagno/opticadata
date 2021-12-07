@@ -40,6 +40,7 @@ const OccupationModal = ({ showModal, setShowModal, occupations }: Props) => {
                                     type="text"
                                     placeholder="Nome do cargo"
                                     onChange={e => { setName(e.target.value) }}
+                                    maxLength={20}
                                     required
                                 />
                                 <div className={styles.bottom}></div>

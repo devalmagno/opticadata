@@ -14,7 +14,7 @@ const PaymentOrder = ({ orderPayment, setOrderPayment, customer }: Props) => {
     const [amount, setAmount] = useState(1);
     const [typeOfPayment, setTypeOfPayment] = useState("Dinheiro");
     const [isInstallments, setIsInstallments] = useState(false);
-    const [paymentDates, setPaymentDates] = useState<Date[]>([new Date()]);
+    const [paymentDates, setPaymentDates] = useState<Date[]>([]);
 
     const paymentOptions = ["Boleto", "Cartão de crédito", "Dinheiro", "Pix"];
 

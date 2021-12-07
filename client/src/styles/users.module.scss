@@ -19,14 +19,19 @@
                     tr {
 
                         :nth-child(2) {
-                            max-width: 12rem;
-                            overflow: hidden;
+                            width: 12rem;
                             pointer-events: all;
                             cursor: pointer;
+                            
+                            .email {
+                                width: 12rem;
+                                overflow: hidden;
+                            }
 
                             .tooltip {
                                 position: absolute;
                                 top: -1rem;
+                                width: fit-content;
                                 background: var(--bg-secondary);
                                 padding: 0.5rem 1em;
                                 border-radius: 0.4rem;

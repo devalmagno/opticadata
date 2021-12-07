@@ -7,19 +7,19 @@ class Customer {
     @PrimaryColumn()
     id: string;
 
-    @Column()
+    @Column({ length: 14 })
     cpf: string;
 
-    @Column()
+    @Column({ length: 18 })
     cnpj: string;
 
-    @Column()
+    @Column({ length: 40 })
     name: string;
 
-    @Column()
+    @Column({ length: 100 })
     email: string;
 
-    @Column()
+    @Column({ length: 14 })
     phone: string;
 
     @CreateDateColumn()

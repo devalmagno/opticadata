@@ -4,6 +4,7 @@ import { Occupation } from "../entities/Occupation";
 import { OccupationsRepository } from "../repositories/OccupationsRepository";
 
 interface IOccupationCreate {
+    id?: string;
     name: string;
     commission_percentege: number;
 }
@@ -15,7 +16,7 @@ class OccupationsService {
         this.occupationsRepository = getCustomRepository(OccupationsRepository);
     }
 
-    async create({ name, commission_percentege }: IOccupationCreate) {
+    async create({ id, name, commission_percentege }: IOccupationCreate) {
         const occupationAlreadyExists = await this.occupationsRepository.findOne({
             name,
         });
@@ -25,6 +26,7 @@ class OccupationsService {
         }
 
         const occupation = this.occupationsRepository.create({
+            id,
             name,
             commission_percentege
         });

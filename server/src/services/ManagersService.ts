@@ -6,6 +6,7 @@ import { Manager } from "../entities/Manager";
 import { ManagersRepository } from "../repositories/ManagersRepository";
 
 interface IManagersCreate {
+    id?: string;
     name: string;
     email: string;
     phone: string;
@@ -20,7 +21,7 @@ class ManagersService {
         this.ManagersRepository = getCustomRepository(ManagersRepository);
     }
 
-    async create({ name, email, phone, cpf, password }: IManagersCreate) {
+    async create({ id ,name, email, phone, cpf, password }: IManagersCreate) {
         const managerCPFAlreadyExists = await this.ManagersRepository.findOne({
             cpf
         });
@@ -36,6 +37,7 @@ class ManagersService {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const managers = this.ManagersRepository.create({
+            id,
             name,
             email,
             phone,

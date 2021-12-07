@@ -8,7 +8,7 @@ class Payment {
     @PrimaryColumn()
     id: string;
 
-    @Column()
+    @Column({ length: 40 })
     type_of_payment: string;
 
     @CreateDateColumn()

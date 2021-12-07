@@ -115,6 +115,7 @@ const Home = () => {
                                 name="password"
                                 id="password"
                                 placeholder="Senha"
+                                maxLength={40}
                                 onKeyDown={keyEvent => handleCapslock(keyEvent)}
                                 onChange={e => { setPassword(e.target.value) }}
                                 required

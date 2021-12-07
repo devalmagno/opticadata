@@ -109,6 +109,7 @@ const WorkerForm = ({ showModal, setShowModal, workers }: Props) => {
                                     type="text"
                                     placeholder="Nome"
                                     id="name"
+                                    maxLength={40}
                                     onChange={(e) => {
                                         setName(e.target.value);
                                     }}
@@ -124,6 +125,8 @@ const WorkerForm = ({ showModal, setShowModal, workers }: Props) => {
                                     type="email"
                                     placeholder="Email"
                                     id="email"
+                                    maxLength={100}
+
                                     onChange={(e) => {
                                         setEmail(e.target.value);
                                     }}

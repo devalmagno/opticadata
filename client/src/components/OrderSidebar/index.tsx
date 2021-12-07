@@ -155,9 +155,11 @@ const OrderSidebar = () => {
                             styles.button :
                             `${styles.button} ${styles.disabled}`
                         }
-                            onClick={handleCreateNewOrder}
                         >
-                            <button>
+                            <button
+                            disabled={orderPayment.payment_date.length == 0}
+                            onClick={handleCreateNewOrder}
+                            >
                                 Confirmar venda
                             </button>
                         </div>

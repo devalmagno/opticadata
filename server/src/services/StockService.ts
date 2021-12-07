@@ -23,6 +23,24 @@ class StockService {
         provider_id,
         entry = false
     }: IStockCreate) {
+        const stockAlreadyExists = await this.stockRepository.find({
+            where: { product_id }
+        });
+
+        let quantityInStock = 0;
+
+        if (stockAlreadyExists) {
+            stockAlreadyExists.forEach(stock => {
+                if (stock.entry == true) {
+                    quantityInStock += stock.quantity;
+                } else {
+                    quantityInStock -= stock.quantity;
+                }
+            })
+        }
+
+        if (entry == false && (!stockAlreadyExists || quantityInStock < quantity)) throw new Error ("You must have the corresponding or greater quantity in stock to make a subtraction.")
+        
         const stock = this.stockRepository.create({
             quantity,
             product_id,

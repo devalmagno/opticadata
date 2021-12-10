@@ -30,6 +30,7 @@ const OrderModal = ({
         setCurrentInstallment(ins);
         setCurrentIndex(index);
         setShowPaymentModal(!showPaymentModal);
+        console.log(ordersInfo[0].workers);
     };
 
     const sortDates = (date1: Installment, date2: Installment) => {

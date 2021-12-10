@@ -66,14 +66,12 @@ const ManagerForm = ({ showModal, setShowModal, managers }: Props) => {
             return;
         }
 
-        console.log(name, email, cpf, phone, password);
-
         api.post(`/managers/register`, {
             name,
             email,
             cpf,
             phone,
-            password: "admin",
+            password: password ? password : "admin",
         })
             .then((res) => {
                 managers.push(res.data.manager);

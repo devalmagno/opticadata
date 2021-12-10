@@ -63,18 +63,24 @@ const OrderSidebar = () => {
 
     if (!products || !workers || !customers) return <Loading />;
 
+    let price = 0;
+    let perInstallment = 0;
+
+    orderProducts.forEach((prod) => {
+        price += prod.unit_price * prod.quantity;
+    });
+
+    if (price > 0 && orderPayment.payment_date.length > 1) {
+        perInstallment = price / orderPayment.payment_date.length;
+    } 
+
     const handleCreateNewOrder = () => {
-        const products_id = orderProducts.map(prod => prod.id);
-        const workers_id = orderWorkers.map(worker => worker.id);
-        const customer_id = orderCustomers[0] != null ? orderCustomers[0].id : null;
+        const products_id = orderProducts.map((prod) => prod.id);
+        const workers_id = orderWorkers.map((worker) => worker.id);
+        const customer_id =
+            orderCustomers[0] != null ? orderCustomers[0].id : null;
         const payment_date = formatedDate(orderPayment.payment_date);
-        const quantity = orderProducts.map(prod => prod.quantity);
-        let price = 0;
-
-        orderProducts.forEach(prod => {
-            price += prod.unit_price * prod.quantity;
-        });
-
+        const quantity = orderProducts.map((prod) => prod.quantity);
 
         api.post("/orders", {
             products_id,
@@ -83,12 +89,14 @@ const OrderSidebar = () => {
             payment_date,
             price,
             quantity,
-            type_of_payment: orderPayment.type_of_payment
-        }).then(() => {
-            alert("Registro de ordem feito com sucesso");
-        }).catch(err => {
-            console.log(err.message);
+            type_of_payment: orderPayment.type_of_payment,
         })
+            .then(() => {
+                alert("Registro de ordem feito com sucesso");
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
 
         setOrderProducts([]);
         setOrderWorkers([]);
@@ -98,7 +106,7 @@ const OrderSidebar = () => {
             payment_date: [],
         });
         setShowSidebar(!showSidebar);
-    }
+    };
 
     return (
         <>
@@ -148,22 +156,32 @@ const OrderSidebar = () => {
                             customer={orderCustomers}
                         />
 
-                        <div className={
-                            orderProducts.length != 0 &&
-                            orderWorkers.length != 0 &&
-                            orderPayment.payment_date.length != 0 ?
-                            styles.button :
-                            `${styles.button} ${styles.disabled}`
-                        }
+                        <div style={price == 0 ? {display: "none"} : {display: "block"} }>
+                            <strong>Preço total: </strong>
+                            <span>R$ {price.toFixed(2)}</span>
+                        </div>
+
+                        <div style={perInstallment == 0? {display: "none"} : {display: "block"}}>
+                            <strong>Preço por parcela: </strong>
+                            <span>{orderPayment.payment_date.length}x de R$ {perInstallment.toFixed(2)}</span>
+                        </div>
+
+                        <div
+                            className={
+                                orderProducts.length != 0 &&
+                                orderWorkers.length != 0 &&
+                                orderPayment.payment_date.length != 0
+                                    ? styles.button
+                                    : `${styles.button} ${styles.disabled}`
+                            }
                         >
                             <button
-                            disabled={orderPayment.payment_date.length == 0}
-                            onClick={handleCreateNewOrder}
+                                disabled={orderPayment.payment_date.length == 0}
+                                onClick={handleCreateNewOrder}
                             >
                                 Confirmar venda
                             </button>
                         </div>
-
                     </div>
                 </div>
             ) : (
@@ -185,21 +203,25 @@ const OrderSidebar = () => {
 };
 
 const formatedDate = (dateList: Date[]) => {
-    const currentDate = dateList.map(date => {
+    const currentDate = dateList.map((date) => {
         return {
             date: date.getDate(),
             month: date.getMonth(),
             year: date.getFullYear(),
-        }
-    })
+        };
+    });
 
-    const payment_date = currentDate.map(date => {
-        const formatedDate = new Date(date.year, date.month, date.date + 1).toISOString();
+    const payment_date = currentDate.map((date) => {
+        const formatedDate = new Date(
+            date.year,
+            date.month,
+            date.date + 1
+        ).toISOString();
 
         return formatedDate;
     });
-    
+
     return payment_date;
-}
+};
 
 export default OrderSidebar;

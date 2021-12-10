@@ -129,7 +129,7 @@ const Users = () => {
                                             handleEditOccupation(worker);
                                         }}
                                     >
-                                        {worker.occupation.name != null
+                                        {worker.occupation != null
                                             ? worker.occupation.name
                                             : "Adicionar cargo"}
                                         <div className={styles.tooltip}>

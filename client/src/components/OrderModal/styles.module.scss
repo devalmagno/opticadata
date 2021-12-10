@@ -169,6 +169,7 @@
                             align-items: center;
                             justify-content: center;
                             cursor: pointer;
+                                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 
                             strong {
                                 font-size: 1.25rem;
@@ -186,6 +187,7 @@
                                 font-weight: 500;
                                 opacity: 0;
                                 transition: all 0.3s ease;
+                                pointer-events: none;
                                 z-index: 99;
                             }
                         }

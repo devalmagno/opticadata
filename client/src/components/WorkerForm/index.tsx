@@ -76,13 +76,13 @@ const WorkerForm = ({ showModal, setShowModal, workers }: Props) => {
             occupation_id: occupation == "none" ? null : occupation,
         })
             .then(res => {
-                workers.push(res.data.worker);
+                const worker: Worker = res.data.worker;
+
+                workers.push(worker);
                 setShowModal(!showModal);
+            }).catch(err => {
+                alert(err.message);
             })
-            .catch((err) => {
-                console.log(err.message);
-                alert("CPF ou E-mail já cadastrado.");
-            });
     };
 
     return (

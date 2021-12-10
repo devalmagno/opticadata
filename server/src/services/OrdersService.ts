@@ -209,13 +209,13 @@ class OrdersService {
                                 )
                                 .map((worker) => worker.name)[0],
                             occupation: workers
-                                .filter((worker) => worker.id == workerOrder.id)
+                                .filter((worker) => worker.id == workerOrder.worker_id)
                                 .map((worker) => {
                                     const occupation = occupations.filter(
                                         (occ) => occ.id == worker.occupation_id
-                                    )[0].name;
+                                    ).map(occ => occ.name);
 
-                                    return occupation;
+                                    return occupation[0];
                                 }),
                         };
 
@@ -223,6 +223,7 @@ class OrdersService {
                     }),
             };
         });
+
 
         return fullOrder;
     }
